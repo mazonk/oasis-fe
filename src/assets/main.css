@@ -33,16 +33,7 @@
 
 /* 4. External Font and Scrollbars */
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
-
+/* Hide scrollbars globally */
 ::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  @apply bg-gray-200 rounded-full border-4 border-transparent bg-clip-content;
-}
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-300;
+  display: none;
 }
