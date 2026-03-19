@@ -7,19 +7,30 @@ export interface LoginResponse {
 }
 
 export const authService = {
-  async login(credentials: any): Promise<LoginResponse> {
-    const response = await api.post<LoginResponse>('/auth/login', credentials);
-    return response.data;
+  async login(email: string, password: string): Promise<LoginResponse> {
+    try {
+      const response = await api.post<LoginResponse>('Auth/login', {email, password });
+      return response.data;
+    } catch (error: any) {
+      console.log('Login error:', error.response?.data || error.message);
+      throw error;
+    }
   },
-  async register(data: any): Promise<LoginResponse> {
-    const response = await api.post<LoginResponse>('/auth/register', data);
-    return response.data;
+  async register(fname: string, lname: string, email: string, password: string): Promise<LoginResponse> {
+    try {
+      const response = await api.post<LoginResponse>('Auth/register', { fname, lname, email, password });
+      return response.data;
+    } catch (error: any) {
+      console.log('Registration error:', error.response?.data || error.message);
+      throw error;
+    }
   },
+
   async logout(): Promise<void> {
-    await api.post('/auth/logout');
+    await api.post('Auth/logout');
   },
   async getCurrentUser(): Promise<User> {
-    const response = await api.get<User>('/auth/me');
+    const response = await api.get<User>('Auth/me');
     return response.data;
   },
 };

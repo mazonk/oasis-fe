@@ -9,21 +9,24 @@ const emit = defineEmits<{
 }>();
 
 const authStore = useAuthStore();
-const name = ref('');
+const fname = ref('');
+const lname = ref('');
 const email = ref('');
 const password = ref('');
 const isLoading = ref(false);
 const error = ref<string | null>(null);
 
 const handleSubmit = async () => {
+    console.log('Submitting registration with:', { fname: fname.value, lname: lname.value, email: email.value });
   isLoading.value = true;
   error.value = null;
   try {
-    await authStore.register({ 
-      name: name.value, 
-      email: email.value, 
-      password: password.value 
-    });
+    await authStore.register( 
+      fname.value, 
+      lname.value,
+      email.value, 
+      password.value 
+    );
     emit('success');
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Failed to create account. Please try again.';
@@ -33,7 +36,6 @@ const handleSubmit = async () => {
 };
 
 const handleGithubLogin = () => {
-  // In a real app, this would redirect to OAuth
   console.log('Github registration initiated');
 };
 </script>
@@ -49,31 +51,46 @@ const handleGithubLogin = () => {
       <div v-if="error" class="p-4 bg-red-50 text-red-600 rounded-2xl text-sm font-medium border border-red-100">
         {{ error }}
       </div>
-
+<div class ="space-y-2 grid grid-cols-2">
       <div class="space-y-2">
-        <label class="text-sm font-bold text-gray-700 ml-1">Full Name</label>
+        <label class="text-sm font-bold text-gray-700 ml-1">First name</label>
         <div class="relative group">
-          <UserPlus class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 transition-colors group-focus-within:text-indigo-500" />
+          <UserPlus class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 transition-colors group-focus-within:text-oasis-lime" />
           <input 
-            v-model="name"
+            v-model="fname"
             type="text" 
             placeholder="John Doe"
-            class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+            class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-oasis-lime transition-all font-medium"
             required
             :disabled="isLoading"
           />
         </div>
       </div>
+      <div class="space-y-2">
+        <label class="text-sm font-bold text-gray-700 ml-1">Last Name</label>
+        <div class="relative group">
+          <UserPlus class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 transition-colors group-focus-within:text-oasis-lime" />
+          <input 
+            v-model="lname"
+            type="text" 
+            placeholder="John Doe"
+            class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-oasis-lime transition-all font-medium"
+            required
+            :disabled="isLoading"
+          />
+        </div>
+      </div>
+      </div>
 
       <div class="space-y-2">
         <label class="text-sm font-bold text-gray-700 ml-1">Email Address</label>
         <div class="relative group">
-          <Mail class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 transition-colors group-focus-within:text-indigo-500" />
+          <Mail class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 transition-colors group-focus-within:text-oasis-lime" />
           <input 
             v-model="email"
             type="email" 
             placeholder="name@company.com"
-            class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+            class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-oasis-lime transition-all font-medium"
             required
             :disabled="isLoading"
           />
@@ -83,12 +100,12 @@ const handleGithubLogin = () => {
       <div class="space-y-2">
         <label class="text-sm font-bold text-gray-700 ml-1">Password</label>
         <div class="relative group">
-          <Lock class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 transition-colors group-focus-within:text-indigo-500" />
+          <Lock class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 transition-colors group-focus-within:text-oasis-lime" />
           <input 
             v-model="password"
             type="password" 
             placeholder="••••••••"
-            class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+            class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-oasis-lime transition-all font-medium"
             required
             :disabled="isLoading"
           />
@@ -97,7 +114,7 @@ const handleGithubLogin = () => {
 
       <button 
         type="submit"
-        class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full bg-oasis-moss text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-oasis-lime transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-oasis-sky/20 disabled:opacity-50 disabled:cursor-not-allowed"
         :disabled="isLoading"
       >
         <ArrowRight v-if="!isLoading" class="w-5 h-5" />
@@ -126,7 +143,7 @@ const handleGithubLogin = () => {
 
     <p class="text-center text-gray-500 font-medium">
       Already have an account? 
-      <button @click="emit('toggle')" class="text-indigo-600 font-bold hover:underline ml-1">Sign in</button>
+      <button @click="emit('toggle')" class="text-oasis-lime font-bold hover:underline ml-1">Sign in</button>
     </p>
   </div>
 </template>

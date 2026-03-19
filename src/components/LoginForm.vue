@@ -53,7 +53,7 @@ const handleGithubLogin = () => {
             v-model="email"
             type="email" 
             placeholder="name@company.com"
-            class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+            class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-oasis-lime transition-all font-medium"
             required
             :disabled="isLoading"
           />
@@ -68,7 +68,7 @@ const handleGithubLogin = () => {
             v-model="password"
             type="password" 
             placeholder="••••••••"
-            class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+            class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-oasis-lime transition-all font-medium"
             required
             :disabled="isLoading"
           />
@@ -77,7 +77,7 @@ const handleGithubLogin = () => {
 
       <button 
         type="submit"
-        class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full bg-oasis-moss text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-oasis-lime transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed"
         :disabled="isLoading"
       >
         <LogIn v-if="!isLoading" class="w-5 h-5" />
@@ -106,7 +106,7 @@ const handleGithubLogin = () => {
 
     <p class="text-center text-gray-500 font-medium">
       Don't have an account? 
-      <button @click="emit('toggle')" class="text-indigo-600 font-bold hover:underline ml-1">Create one</button>
+      <button @click="emit('toggle')" class="text-oasis-lime font-bold hover:underline ml-1">Create one</button>
     </p>
   </div>
 </template>

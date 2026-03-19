@@ -5,31 +5,34 @@ import { authService } from "../services/authService";
 import type { IJwtPayload } from "../interfaces/IJwtPayload";
 import { jwtDecode } from "jwt-decode";
 
-function isTokenExpired(token: string): boolean {
-   try {
-      const decoded = jwtDecode<IJwtPayload>(token);
-      if (!decoded.exp) return true;
+// function isTokenExpired(token: string): boolean {
+//    try {
+//       const decoded = jwtDecode<IJwtPayload>(token);
+//       if (!decoded.) return true;
 
-      const now = Math.floor(Date.now() / 1000);
-      return decoded.exp < now;
-   } catch (err) {
-      return true;
-   }
-}
+//       const now = Math.floor(Date.now() / 1000);
+//       return decoded.exp < now;
+//    } catch (err) {
+//       return true;
+//    }
+// }
 
-export const useAuthStore = defineStore("auth", () => {
-  const user = ref<User | null>(null);
-  const token = ref<string | null>(localStorage.getItem("token"));
-  const isAuthenticated = computed(() => !!user.value);
+export const useAuthStore = defineStore('auth', {
+  state: () => ({
+    token: sessionStorage.getItem("jwtToken") || (null as string | null),
+    user: null as User | null,
+    isAuthenticated: !!sessionStorage.getItem("jwtToken"),
+  }),
+  actions: {
 
-  async function login(email: string, password: string): Promise<void> {
-    const response = await authService.login({ username, password });
+  async login(email: string, password: string): Promise<void> {
+    const response = await authService.login({ email, password });
     try {
-      const token = await this.service.login(username, password);
+      const token = await this.service.login(email, password);
 
-      if (isTokenExpired(token)) {
-        throw new Error("Token is expired");
-      }
+      // if (isTokenExpired(token)) {
+      //   throw new Error("Token is expired");
+      // }
 
       this.token = token;
       sessionStorage.setItem("jwtToken", token);
@@ -42,39 +45,30 @@ export const useAuthStore = defineStore("auth", () => {
     } finally {
       this.loading = false;
     }
-  }
+  },
 
-  async function register(data: any) {
-    const response = await authService.register(data);
-    user.value = response.user;
-    token.value = response.token;
+  async register( fname: string, lname: string, email: string, password: string): Promise<void> {
+    const response = await authService.register(fname, lname, email, password);
+    this.user = response.user;
+    this.token = response.token;
     localStorage.setItem("token", response.token);
-  }
+  },
 
-  async function logout() {
+  async logout() {
     await authService.logout();
-    user.value = null;
-    token.value = null;
+    this.user = null;
+    this.token = null;
     localStorage.removeItem("token");
-  }
+  },
 
-  async function fetchCurrentUser() {
-    if (token.value) {
+  async fetchCurrentUser() {
+    if (this.token) {
       try {
-        user.value = await authService.getCurrentUser();
+        this.user = await authService.getCurrentUser();
       } catch (error) {
-        logout();
+        this.logout();
       }
     }
   }
-
-  return {
-    user,
-    token,
-    isAuthenticated,
-    login,
-    register,
-    logout,
-    fetchCurrentUser,
-  };
+  }
 });
