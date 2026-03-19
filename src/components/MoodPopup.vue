@@ -3,7 +3,7 @@ import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { gsap } from 'gsap';
 import { X } from 'lucide-vue-next';
 import { MOODS } from '../constants';
-import { cn } from '../lib/utils';
+import { cn } from '../utils/utils';
 import { isWithinInterval, setHours, setMinutes } from 'date-fns';
 import { Motion } from '@motionone/vue';
 

@@ -11,7 +11,7 @@ import {
   LogOut,
   User as UserIcon
 } from 'lucide-vue-next';
-import { cn } from '../lib/utils';
+import { cn } from '../utils/utils';
 
 defineProps<{
   activeTab: string;
@@ -36,7 +36,7 @@ const menuItems = [
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="nav-logo flex items-center gap-3">
             <Mascot size="40px" color="#4F46E5" />
-        <span class="font-bold text-xl tracking-tight text-gray-100">Blobs.</span>
+        <span class="font-bold text-xl tracking-tight text-gray-100">.oasis</span>
       </div>
 
       <div class="hidden md:flex items-center gap-1">

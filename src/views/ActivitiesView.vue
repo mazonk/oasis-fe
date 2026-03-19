@@ -12,7 +12,7 @@ import {
   Star
 } from 'lucide-vue-next';
 import { ACTIVITIES } from '../constants';
-import { cn } from '../lib/utils';
+import { cn } from '../utils/utils';
 import { Motion } from '@motionone/vue';
 
 const iconMap: Record<string, any> = {
