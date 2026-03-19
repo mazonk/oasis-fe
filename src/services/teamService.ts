@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { TeamInvitation, SocialInteraction } from '../types';
-import { teamService, type Team } from '../services/teamService';
+import { teamService } from '../services/teamService';
+import type { Team } from '../models/Team';
 
 export const useTeamStore = defineStore('team', () => {
   const team = ref<Team | null>(null);
@@ -62,3 +63,5 @@ export const useTeamStore = defineStore('team', () => {
     fetchSocialInteractions,
   };
 });
+export { teamService };
+

@@ -32,11 +32,11 @@ const menuItems = [
 </script>
 
 <template>
-  <nav class="w-full bg-oasis-navy border-b border-gray-100 sticky top-0 z-40 px-6 py-3">
+  <nav class="w-full bg-gradient-to-r from-oasis-navy via-oasis-sky to-oasis-lime sticky top-0 z-40 px-6 py-3 shadow-lg backdrop-blur-md bg-opacity-90">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="nav-logo flex items-center gap-3">
             <Mascot size="40px" color="#4F46E5" />
-        <span class="font-bold text-xl tracking-tight text-oasis-sky">Blobs.</span>
+        <span class="font-bold text-xl tracking-tight text-gray-100">Blobs.</span>
       </div>
 
       <div class="hidden md:flex items-center gap-1">

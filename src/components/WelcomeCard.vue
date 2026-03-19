@@ -47,7 +47,7 @@ const emit = defineEmits<{
       </button>
       
       <button 
-        class="w-full py-4 px-8 bg-transparent text-oasis-moss font-bold rounded-full hover:bg-oasis-bg transition-colors duration-200"
+        class="w-full py-4 px-8 bg-transparent text-oasis-moss font-bold rounded-full hover:bg-oasis-moss/10 transition-colors duration-200"
       >
         View Progress
       </button>

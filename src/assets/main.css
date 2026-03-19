@@ -9,6 +9,7 @@
   --color-oasis-moss: #6B8834;
   --color-oasis-sky: #559ED2;
   --color-oasis-navy: #0B395A;
+  --color-oasis-purple: #6D597A;
   --color-oasis-bg: #F8FAF5;
 }
 
@@ -16,7 +17,7 @@
 @layer base {
   body {
     /* We use @apply to use the utilities we just defined above */
-    @apply antialiased text-oasis-navy bg-oasis-bg;
+    @apply antialiased text-oasis-navy bg-oasis-moss;
     font-family: var(--font-quicksand);
     font-feature-settings: "cv02", "cv05", "cv11";
     margin: 0;
