@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+:root {
+  /* Brand Colors */
+  --color-oasis-lime: #B6CF33;
+  --color-oasis-moss: #6B8834;
+  --color-oasis-sky: #559ED2;
+  --color-oasis-navy: #0B395A;
+  
+  /* Background/Neutral */
+  --color-oasis-bg: #F8FAF5; /* A very soft off-white with a hint of lime */
+  
+  /* Typography */
+  --font-main: 'Quicksand', sans-serif;
+}
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-oasis-bg);
+  color: var(--color-oasis-navy);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}

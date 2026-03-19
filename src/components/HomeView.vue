@@ -1,7 +1,27 @@
 <script setup lang="ts">
-import { Trophy, Users, Zap } from 'lucide-vue-next';
+import { ref } from 'vue';
+import { Trophy, Users, Zap, Edit2, X } from 'lucide-vue-next';
 import { SOCIAL_INTERACTIONS } from '../constants';
 import { Motion } from '@motionone/vue';
+
+const dailyGoal = ref({
+  title: 'Daily Goal',
+  description: 'Complete 2 social activities today to earn bonus XP.',
+  progress: 50
+});
+
+const isEditingGoal = ref(false);
+const editForm = ref({ ...dailyGoal.value });
+
+const openEditModal = () => {
+  editForm.value = { ...dailyGoal.value };
+  isEditingGoal.value = true;
+};
+
+const saveGoal = () => {
+  dailyGoal.value = { ...editForm.value };
+  isEditingGoal.value = false;
+};
 </script>
 
 <template>
@@ -64,22 +84,30 @@ import { Motion } from '@motionone/vue';
         :initial="{ opacity: 0, y: 20 }"
         :animate="{ opacity: 1, y: 0 }"
         :transition="{ delay: 0.1 }"
-        class="bg-indigo-600 rounded-[40px] p-8 text-white shadow-xl shadow-indigo-100 relative overflow-hidden"
+        class="bg-[#B6CF33] rounded-[40px] p-8 text-white shadow-xl shadow-indigo-100 relative overflow-hidden group"
       >
         <div class="relative z-10">
-          <Zap class="w-10 h-10 mb-6 text-indigo-200" />
-          <h2 class="text-2xl font-bold mb-2">Daily Goal</h2>
-          <p class="text-indigo-100 text-sm mb-8">Complete 2 social activities today to earn bonus XP.</p>
+          <div class="flex justify-between items-start mb-6">
+            <Zap class="w-10 h-10 text-indigo-200" />
+            <button 
+              @click="openEditModal"
+              class="p-2 bg-indigo-500/30 hover:bg-indigo-500/50 rounded-xl transition-colors opacity-0 group-hover:opacity-100"
+            >
+              <Edit2 class="w-4 h-4 text-white" />
+            </button>
+          </div>
+          <h2 class="text-2xl font-bold mb-2">{{ dailyGoal.title }}</h2>
+          <p class="text-indigo-100 text-sm mb-8">{{ dailyGoal.description }}</p>
           
           <div class="space-y-4">
             <div class="flex justify-between text-sm font-bold">
               <span>Progress</span>
-              <span>50%</span>
+              <span>{{ dailyGoal.progress }}%</span>
             </div>
             <div class="h-3 bg-indigo-500/50 rounded-full overflow-hidden">
               <Motion 
                 :initial="{ width: 0 }"
-                :animate="{ width: '50%' }"
+                :animate="{ width: dailyGoal.progress + '%' }"
                 class="h-full bg-white rounded-full"
               />
             </div>
@@ -94,6 +122,74 @@ import { Motion } from '@motionone/vue';
         <div class="absolute -top-10 -left-10 w-40 h-40 bg-indigo-400/10 rounded-full blur-3xl" />
       </Motion>
     </div>
+
+    <!-- Edit Goal Modal -->
+    <Teleport to="body">
+      <Transition name="fade">
+        <div v-if="isEditingGoal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <Motion
+            :initial="{ scale: 0.9, opacity: 0, y: 20 }"
+            :animate="{ scale: 1, opacity: 1, y: 0 }"
+            class="bg-white rounded-[32px] p-8 max-w-md w-full shadow-2xl relative"
+          >
+            <button
+              @click="isEditingGoal = false"
+              class="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <X class="w-5 h-5 text-gray-400" />
+            </button>
+
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Edit Daily Goal</h2>
+            
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Title</label>
+                <input 
+                  v-model="editForm.title"
+                  type="text"
+                  class="w-full bg-gray-50 border border-gray-100 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                />
+              </div>
+              
+              <div>
+                <label class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Description</label>
+                <textarea 
+                  v-model="editForm.description"
+                  rows="3"
+                  class="w-full bg-gray-50 border border-gray-100 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
+                ></textarea>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Progress ({{ editForm.progress }}%)</label>
+                <input 
+                  v-model.number="editForm.progress"
+                  type="range"
+                  min="0"
+                  max="100"
+                  class="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                />
+              </div>
+            </div>
+
+            <div class="mt-8 flex gap-3">
+              <button 
+                @click="isEditingGoal = false"
+                class="flex-1 px-6 py-4 rounded-2xl font-bold text-gray-500 hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                @click="saveGoal"
+                class="flex-1 px-6 py-4 rounded-2xl font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100"
+              >
+                Save Changes
+              </button>
+            </div>
+          </Motion>
+        </div>
+      </Transition>
+    </Teleport>
 
     <!-- Health Score Section -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -127,3 +223,15 @@ import { Motion } from '@motionone/vue';
     </div>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

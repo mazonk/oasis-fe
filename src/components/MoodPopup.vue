@@ -51,7 +51,7 @@ onUnmounted(() => {
         </button>
 
         <div class="text-center mb-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-2">Check-in time:</h2>
+          <h2 class="text-2xl font-bold text-gray-900 mb-2">Vibe check:</h2>
           <p class="text-gray-500">How are you today?</p>
         </div>
 
