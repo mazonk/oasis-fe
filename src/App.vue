@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import '@/assets/main.css';
-import Navbar from '@/components/Navbar.vue';
+import Navbar from './components/Navbar.vue';
 import HomeView from './views/HomeView.vue';
 import TeamView from './views/TeamView.vue';
 import ActivitiesView from './views/ActivitiesView.vue';
+import RoadmapView from './views/RoadmapView.vue';
 import MoodPopup from './components/MoodPopup.vue';
 import AuthView from './views/AuthView.vue';
 import { Motion } from '@motionone/vue';
@@ -21,6 +21,7 @@ const handleLogout = () => {
   activeTab.value = 'home';
 };
 </script>
+
 <template>
   <div class="min-h-screen bg-[#FAFAFA] text-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900">
     <template v-if="isAuthenticated">
@@ -33,14 +34,7 @@ const handleLogout = () => {
               <HomeView v-if="activeTab === 'home'" />
               <TeamView v-else-if="activeTab === 'team'" />
               <ActivitiesView v-else-if="activeTab === 'activities'" />
-              
-              <div v-else-if="activeTab === 'roadmap'" class="flex flex-col items-center justify-center h-[60vh] text-center space-y-4">
-                <div class="w-24 h-24 bg-indigo-100 rounded-[32px] flex items-center justify-center">
-                  <span class="text-4xl">🗺️</span>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-900">XP Roadmap</h2>
-                <p class="text-gray-500 max-w-md">Your journey to becoming a Wellness Master is being mapped out. Check back soon!</p>
-              </div>
+              <RoadmapView v-else-if="activeTab === 'roadmap'" />
               
               <div v-else-if="activeTab === 'settings'" class="flex flex-col items-center justify-center h-[60vh] text-center space-y-4">
                 <div class="w-24 h-24 bg-gray-100 rounded-[32px] flex items-center justify-center">
@@ -54,7 +48,7 @@ const handleLogout = () => {
         </div>
       </main>
 
-     <MoodPopup />
+      <MoodPopup />
     </template>
     <template v-else>
       <AuthView @login="handleLogin" />
@@ -78,3 +72,4 @@ const handleLogout = () => {
   transform: translateX(-10px);
 }
 </style>
+<script setup lang="ts"></script>

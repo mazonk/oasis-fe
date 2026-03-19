@@ -80,7 +80,7 @@ const handleGithubLogin = () => {
         
         <div class="space-y-4 relative z-10">
           <div class="flex items-center gap-6 mb-8">
-            <Mascot size="150px" color="#4F46E5" />
+            <Mascot size="100px" color="#4F46E5" />
           </div>
           <h1 class="text-5xl font-black text-gray-900 leading-tight">
             Your mental <br/>

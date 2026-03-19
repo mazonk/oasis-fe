@@ -29,23 +29,13 @@ const menuItems = [
   { id: 'roadmap', icon: Map, label: 'Roadmap' },
   { id: 'settings', icon: Settings, label: 'Settings' },
 ];
-
-onMounted(() => {
-  // Logo animation
-  gsap.from('.nav-logo', {
-    x: -20,
-    opacity: 0,
-    duration: 0.8,
-    ease: 'power3.out'
-  });
-});
 </script>
 
 <template>
   <nav class="w-full bg-oasis-navy border-b border-gray-100 sticky top-0 z-40 px-6 py-3">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="nav-logo flex items-center gap-3">
-            <Mascot size="100px" color="#4F46E5" />
+            <Mascot size="40px" color="#4F46E5" />
         <span class="font-bold text-xl tracking-tight text-oasis-sky">Blobs.</span>
       </div>
 
@@ -83,7 +73,6 @@ onMounted(() => {
       </div>
     </div>
     
-    <!-- Mobile Menu (simplified) -->
     <div class="md:hidden flex items-center justify-around mt-3 pt-3 border-t border-gray-50">
       <button
         v-for="item in menuItems"
