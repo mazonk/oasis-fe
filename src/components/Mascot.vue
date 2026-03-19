@@ -6,6 +6,11 @@ const props = defineProps<{
   size?: string;
   color?: string;
   mood?: 'happy' | 'calm' | 'energetic';
+  clickable?: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: 'click'): void;
 }>();
 
 const mascotRef = ref<SVGElement | null>(null);
@@ -76,10 +81,12 @@ const handleLeave = () => {
 
 <template>
   <div 
-    class="mascot-wrapper inline-block cursor-pointer"
+    class="mascot-wrapper inline-block"
+    :class="{ 'cursor-pointer': clickable }"
     :style="{ width: size || '120px', height: size || '120px' }"
     @mouseenter="handleHover"
     @mouseleave="handleLeave"
+    @click="clickable && emit('click')"
   >
     <svg 
       ref="mascotRef"

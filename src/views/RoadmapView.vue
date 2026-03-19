@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Info } from 'lucide-vue-next';
 import MoodBean from '../components/MoodBean.vue';
+import Mascot from '../components/Mascot.vue';
 import gsap from 'gsap';
 
 // Join date: March 2025
@@ -112,6 +113,10 @@ const selectDayMood = (date: string) => {
   );
 };
 
+const openMoodCheck = () => {
+  window.dispatchEvent(new CustomEvent('open-mood-popup'));
+};
+
 onMounted(() => {
   gsap.from('.roadmap-header', { y: -20, opacity: 0, duration: 0.8, ease: 'power3.out' });
   gsap.from('.calendar-card', { y: 40, opacity: 0, duration: 1, delay: 0.2, ease: 'power2.out' });
@@ -121,9 +126,18 @@ onMounted(() => {
 <template>
   <div class="space-y-8 max-w-4xl mx-auto">
     <header class="roadmap-header flex items-center justify-between">
-      <div>
-        <h1 class="text-4xl font-bold text-gray-900 tracking-tight">Mood Roadmap</h1>
-        <p class="text-gray-500 mt-2">Track your emotional journey and see how your team vibes affect you.</p>
+      <div class="flex items-center gap-6">
+        <Mascot 
+          size="80px" 
+          color="#4F46E5" 
+          mood="calm" 
+          clickable 
+          @click="openMoodCheck"
+        />
+        <div>
+          <h1 class="text-4xl font-bold text-gray-900 tracking-tight">Mood Roadmap</h1>
+          <p class="text-gray-500 mt-2">Track your emotional journey and see how your team vibes affect you.</p>
+        </div>
       </div>
       <div class="flex items-center gap-2 bg-indigo-50 px-4 py-2 rounded-2xl text-indigo-600 font-bold text-sm">
         <CalendarIcon class="w-4 h-4" />
