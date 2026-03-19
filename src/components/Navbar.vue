@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { gsap } from 'gsap';
+import Mascot from './Mascot.vue';
 import { 
   Home, 
   Users, 
@@ -44,9 +45,7 @@ onMounted(() => {
   <nav class="w-full bg-oasis-navy border-b border-gray-100 sticky top-0 z-40 px-6 py-3">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="nav-logo flex items-center gap-3">
-        <div class="w-10 h-10 bg-oasis-sky rounded-xl flex items-center justify-center">
-          <div class="w-5 h-5 bg-white rounded-full animate-pulse" />
-        </div>
+            <Mascot size="100px" color="#4F46E5" />
         <span class="font-bold text-xl tracking-tight text-oasis-sky">Blobs.</span>
       </div>
 

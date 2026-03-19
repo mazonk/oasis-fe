@@ -10,6 +10,7 @@ import {
   LogIn,
   CheckCircle2
 } from 'lucide-vue-next';
+import Mascot from '../components/Mascot.vue';
 
 const emit = defineEmits<{
   (e: 'login'): void;
@@ -69,14 +70,17 @@ const handleGithubLogin = () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center p-6 bg-oasis-navy/10">
+  <div class="min-h-screen flex items-center justify-center p-6 bg-[#FAFAFA]">
     <div class="auth-container max-w-5xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       
       <!-- Illustration Side -->
-      <div class="auth-illustration hidden lg:block space-y-8">
-        <div class="space-y-4">
-          <div class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-100">
-            <div class="w-8 h-8 bg-white rounded-full animate-pulse" />
+      <div class="auth-illustration hidden lg:block space-y-8 relative">
+        <div class="absolute -top-20 -left-20 w-64 h-64 bg-indigo-100 rounded-full blur-3xl opacity-50 animate-pulse" />
+        <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-emerald-100 rounded-full blur-3xl opacity-50 animate-pulse" style="animation-delay: 1s" />
+        
+        <div class="space-y-4 relative z-10">
+          <div class="flex items-center gap-6 mb-8">
+            <Mascot size="150px" color="#4F46E5" />
           </div>
           <h1 class="text-5xl font-black text-gray-900 leading-tight">
             Your mental <br/>
@@ -142,7 +146,7 @@ const handleGithubLogin = () => {
 
               <button 
                 type="submit"
-                class="w-full bg-oasis-lime text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-100"
+                class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-100"
               >
                 <LogIn class="w-5 h-5" />
                 Sign In

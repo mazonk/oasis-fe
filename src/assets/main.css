@@ -1,20 +1,21 @@
-/* 1. The Tailwind v4 Engine */
 @import "tailwindcss";
 
-/* 2. Your Oasis Theme Definitions */
+/* 1. The Theme "Brain" */
 @theme {
+  /* Mapping the font name to a Tailwind utility */
+  --font-quicksand: "Quicksand", sans-serif;
+  
   --color-oasis-lime: #B6CF33;
   --color-oasis-moss: #6B8834;
   --color-oasis-sky: #559ED2;
   --color-oasis-navy: #0B395A;
   --color-oasis-bg: #F8FAF5;
-  --font-quicksand: "Quicksand", sans-serif;
 }
 
-/* 3. Base Styles (Global defaults) */
+/* 2. Global Base Styles */
 @layer base {
   body {
-    /* Updated to use your Oasis background but keeping your specific settings */
+    /* We use @apply to use the utilities we just defined above */
     @apply antialiased text-oasis-navy bg-oasis-bg;
     font-family: var(--font-quicksand);
     font-feature-settings: "cv02", "cv05", "cv11";
@@ -22,28 +23,25 @@
   }
 }
 
-/* 4. Custom Utilities (Special classes like Perspective) */
+/* 3. Custom Utilities */
 @layer utilities {
   .perspective-1000 {
     perspective: 1000px;
   }
 }
 
-/* 5. Standard CSS (Scrollbars and External Imports) */
+/* 4. External Font and Scrollbars */
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 ::-webkit-scrollbar {
   width: 8px;
 }
-
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-200 rounded-full border-4 border-transparent bg-clip-content;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-300;
 }
