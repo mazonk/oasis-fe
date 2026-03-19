@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
+import { gsap } from 'gsap';
 import { 
   Home, 
   Users, 
@@ -43,7 +45,7 @@ const menuItems = [
           :key="item.id"
           @click="emit('update:activeTab', item.id)"
           :class="cn(
-            'flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 group font-medium',
+            'nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 group font-medium',
             activeTab === item.id 
               ? 'bg-[#B6CF33] text-[#6B8834]' 
               : 'text-gray-200 hover:bg-[#B6CF33]/30 hover:text-[#6B8834]'
@@ -57,12 +59,12 @@ const menuItems = [
         </button>
       </div>
 
-      <div class="flex items-center gap-4">
+      <div class="nav-user flex items-center gap-4">
         <div class="hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-2xl bg-gray-50 border border-gray-100">
           <UserIcon class="w-5 h-5 text-gray-400" />
           <span class="text-sm font-semibold text-gray-900">Katie</span>
         </div>
-        <button class="p-2 text-gray-400 hover:bg-rose-50 hover:text-rose-600 transition-colors rounded-xl">
+        <button class="p-2 text-gray-400 hover:bg-rose-50 hover:text-rose-600 transition-all hover:scale-110 active:scale-90 rounded-xl">
           <LogOut class="w-5 h-5" />
         </button>
       </div>
@@ -75,7 +77,7 @@ const menuItems = [
         :key="item.id"
         @click="emit('update:activeTab', item.id)"
         :class="cn(
-          'p-2 rounded-lg',
+          'nav-item p-2 rounded-lg transition-all active:scale-90',
           activeTab === item.id ? 'text-indigo-600 bg-indigo-50' : 'text-gray-400'
         )"
       >

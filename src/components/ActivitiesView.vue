@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
+import { gsap } from 'gsap';
 import { 
   Coffee, 
   Trees, 
@@ -26,16 +28,45 @@ const categoryColors: Record<string, string> = {
   'Distraction': 'bg-orange-100 text-orange-600',
   'Express Yourself': 'bg-purple-100 text-purple-600',
 };
+
+onMounted(() => {
+  // Header animation
+  gsap.from('.activities-header', {
+    y: -20,
+    opacity: 0,
+    duration: 0.8,
+    ease: 'power3.out'
+  });
+
+  // Activity cards staggered entrance
+  gsap.from('.activity-card', {
+    scale: 0.9,
+    opacity: 0,
+    duration: 0.6,
+    stagger: 0.1,
+    ease: 'back.out(1.7)',
+    delay: 0.2
+  });
+
+  // Info section entrance
+  gsap.from('.info-section', {
+    y: 30,
+    opacity: 0,
+    duration: 1,
+    ease: 'power2.out',
+    delay: 0.6
+  });
+});
 </script>
 
 <template>
   <div class="space-y-8 max-w-7xl mx-auto">
-    <header class="flex items-center justify-between">
+    <header class="activities-header flex items-center justify-between">
       <div>
         <h1 class="text-4xl font-bold text-gray-900 tracking-tight">Activities</h1>
         <p class="text-gray-500 mt-2">Join or organize activities to boost team spirit and earn XP.</p>
       </div>
-      <button class="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-100">
+      <button class="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-indigo-700 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-indigo-100">
         <Plus class="w-5 h-5" />
         Propose New
       </button>
@@ -46,7 +77,7 @@ const categoryColors: Record<string, string> = {
         v-for="activity in ACTIVITIES"
         :key="activity.id"
         :while-hover="{ y: -5 }"
-        class="bg-white rounded-[40px] p-8 shadow-sm border border-gray-50 flex flex-col"
+        class="activity-card bg-white rounded-[40px] p-8 shadow-sm border border-gray-50 flex flex-col"
       >
         <div class="flex items-start justify-between mb-6">
           <div :class="cn('p-4 rounded-3xl', categoryColors[activity.category])">
@@ -84,7 +115,7 @@ const categoryColors: Record<string, string> = {
       </Motion>
     </div>
 
-    <section class="bg-indigo-50 rounded-[40px] p-10 border border-indigo-100">
+    <section class="info-section bg-indigo-50 rounded-[40px] p-10 border border-indigo-100">
       <div class="flex flex-col md:flex-row items-center gap-10">
         <div class="flex-1">
           <h2 class="text-3xl font-bold text-indigo-900 mb-4">Why organize?</h2>

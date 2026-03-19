@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { gsap } from 'gsap';
 import { X } from 'lucide-vue-next';
 import { MOODS } from '../constants';
 import { cn } from '../lib/utils';
@@ -33,18 +34,49 @@ onMounted(() => {
 onUnmounted(() => {
   clearInterval(interval);
 });
+
+// Animate when modal shows up
+watch(isOpen, (newVal) => {
+  if (newVal) {
+    setTimeout(() => {
+      gsap.from('.mood-modal-content', {
+        scale: 0.8,
+        opacity: 0,
+        duration: 0.5,
+        ease: 'back.out(1.7)'
+      });
+
+      gsap.from('.mood-item', {
+        y: 20,
+        opacity: 0,
+        duration: 0.4,
+        stagger: 0.05,
+        ease: 'power2.out',
+        delay: 0.2
+      });
+    }, 50);
+  }
+});
+
+const closePopup = () => {
+  gsap.to('.mood-modal-content', {
+    scale: 0.9,
+    opacity: 0,
+    duration: 0.3,
+    ease: 'power2.in',
+    onComplete: () => {
+      isOpen.value = false;
+    }
+  });
+};
 </script>
 
 <template>
   <Transition name="modal">
     <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <Motion
-        :initial="{ scale: 0.9, opacity: 0, y: 20 }"
-        :animate="{ scale: 1, opacity: 1, y: 0 }"
-        class="bg-white rounded-[32px] p-8 max-w-md w-full shadow-2xl relative overflow-hidden"
-      >
+      <div class="mood-modal-content bg-white rounded-[32px] p-8 max-w-md w-full shadow-2xl relative overflow-hidden">
         <button
-          @click="isOpen = false"
+          @click="closePopup"
           class="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors"
         >
           <X class="w-5 h-5 text-gray-400" />
@@ -62,8 +94,8 @@ onUnmounted(() => {
             as="button"
             :while-hover="{ scale: 1.05 }"
             :while-tap="{ scale: 0.95 }"
-            @click="isOpen = false"
-            class="flex flex-col items-center gap-2"
+            @click="closePopup"
+            class="mood-item flex flex-col items-center gap-2"
           >
             <div :class="cn(
               'w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm',
@@ -76,7 +108,7 @@ onUnmounted(() => {
             </span>
           </Motion>
         </div>
-      </Motion>
+      </div>
     </div>
   </Transition>
 </template>
