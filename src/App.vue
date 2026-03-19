@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import Navbar from './components/Navbar.vue';
-import HomeView from './components/HomeView.vue';
-import TeamView from './components/TeamView.vue';
-import ActivitiesView from './components/ActivitiesView.vue';
+import HomeView from './views/HomeView.vue';
+import TeamView from './views/TeamView.vue';
+import ActivitiesView from './views/ActivitiesView.vue';
 import MoodPopup from './components/MoodPopup.vue';
 import { Motion } from '@motionone/vue';
 
