@@ -48,12 +48,12 @@ const menuItems = [
             'nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 group font-medium',
             activeTab === item.id 
               ? 'bg-oasis-sky text-white' 
-              : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'
+              : 'text-gray-50 hover:bg-gray-50 hover:text-gray-600'
           )"
         >
           <component :is="item.icon" :class="cn(
             'w-5 h-5',
-            activeTab === item.id ? 'text-indigo-600' : 'text-gray-400 group-hover:text-gray-600'
+            activeTab === item.id ? 'text-gray-50' : 'text-gray-50 group-hover:text-gray-600'
           )" />
           {{ item.label }}
         </button>

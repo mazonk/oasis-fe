@@ -36,7 +36,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container bg-oasis-moss h-[70vh] space-y-8 w-full mx-auto p-6 font-quicksand">
+  <div class="container h-[70vh] space-y-8 w-full mx-auto p-6 font-quicksand">
     
     <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 header-content">
       <div>
@@ -57,34 +57,7 @@ onMounted(() => {
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="md:col-span-2 bg-white rounded-[40px] p-8 shadow-sm border border-gray-50 social-card">
-        <div class="flex items-center justify-between mb-8">
-          <h2 class="text-xl font-bold text-oasis-navy flex items-center gap-2">
-            <Users class="w-5 h-5 text-oasis-sky" />
-            Top Social Interactions
-          </h2>
-          <button class="text-sm font-bold text-oasis-sky hover:underline">View all</button>
-        </div>
-        
-        <div class="space-y-6">
-          <div v-for="person in SOCIAL_INTERACTIONS" :key="person.userId" class="flex items-center justify-between group cursor-pointer">
-            <div class="flex items-center gap-4">
-              <div class="relative">
-                <img :src="person.avatar" :alt="person.userName" class="w-12 h-12 rounded-2xl object-cover group-hover:scale-105 transition-transform" />
-                <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-oasis-lime border-2 border-white rounded-full" />
-              </div>
-              <div>
-                <p class="font-bold text-oasis-navy group-hover:text-oasis-sky transition-colors">{{ person.userName }}</p>
-                <p class="text-xs text-gray-400 font-medium">Team Member</p>
-              </div>
-            </div>
-            <div class="text-right">
-              <p class="text-lg font-black text-oasis-sky">{{ person.count }}</p>
-              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Interactions</p>
-            </div>
-          </div>
-        </div>
-      </div>
+     
 
       <Motion 
         :initial="{ opacity: 0, scale: 0.95 }"

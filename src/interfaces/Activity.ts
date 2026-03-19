@@ -1,3 +1,4 @@
+import { ActivityCategory } from "./ActivityCategory";
 export interface Activity {
   activityId: number;
   title: string;
@@ -6,10 +7,4 @@ export interface Activity {
   maxMember?: number;
   categoryId?: number;
   category?: ActivityCategory;
-}
-
-export interface ActivityCategory {
-  categoryId: number;
-  name: string;
-  activities?: Activity[];
 }
