@@ -1,25 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { gsap } from 'gsap';
-import { 
-  Mail, 
-  Lock, 
-  Github, 
-  ArrowRight, 
-  UserPlus, 
-  LogIn,
-  CheckCircle2
-} from 'lucide-vue-next';
+import { CheckCircle2 } from 'lucide-vue-next';
 import Mascot from '../components/Mascot.vue';
+import LoginForm from '../components/LoginForm.vue';
+import RegisterForm from '../components/RegisterForm.vue';
 
 const emit = defineEmits<{
   (e: 'login'): void;
 }>();
 
 const isLogin = ref(true);
-const email = ref('');
-const password = ref('');
-const name = ref('');
 
 const toggleAuth = () => {
   gsap.to('.auth-card', {
@@ -49,8 +40,7 @@ onMounted(() => {
   });
 });
 
-const handleSubmit = () => {
-  // Simulate auth
+const handleSuccess = () => {
   gsap.to('.auth-container', {
     scale: 0.95,
     opacity: 0,
@@ -60,12 +50,6 @@ const handleSubmit = () => {
       emit('login');
     }
   });
-};
-
-const handleGithubLogin = () => {
-  // Simulate Github OAuth
-  console.log('Github login initiated');
-  handleSubmit();
 };
 </script>
 
@@ -81,6 +65,9 @@ const handleGithubLogin = () => {
         <div class="space-y-4 relative z-10">
           <div class="flex items-center gap-6 mb-8">
             <Mascot size="100px" color="#4F46E5" />
+            <div class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-100">
+              <div class="w-8 h-8 bg-white rounded-full animate-pulse" />
+            </div>
           </div>
           <h1 class="text-5xl font-black text-gray-900 leading-tight">
             Your mental <br/>
@@ -107,154 +94,24 @@ const handleGithubLogin = () => {
 
       <!-- Form Side -->
       <div class="relative perspective-1000">
-        <div class="auth-card bg-white rounded-[40px] p-10 shadow-2xl shadow-indigo-100/50 border border-gray-50 relative">
+        <div class="auth-card bg-white rounded-[40px] p-10 shadow-2xl shadow-indigo-100/50 border border-gray-50 relative preserve-3d transition-transform duration-500">
           
-          <div v-if="isLogin" class="space-y-8">
-            <div class="space-y-2">
-              <h2 class="text-3xl font-bold text-gray-900">Welcome back</h2>
-              <p class="text-gray-500">Enter your details to access your dashboard.</p>
-            </div>
-
-            <form @submit.prevent="handleSubmit" class="space-y-5">
-              <div class="space-y-2">
-                <label class="text-sm font-bold text-gray-700 ml-1">Email Address</label>
-                <div class="relative">
-                  <Mail class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input 
-                    v-model="email"
-                    type="email" 
-                    placeholder="name@company.com"
-                    class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div class="space-y-2">
-                <label class="text-sm font-bold text-gray-700 ml-1">Password</label>
-                <div class="relative">
-                  <Lock class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input 
-                    v-model="password"
-                    type="password" 
-                    placeholder="••••••••"
-                    class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
-                    required
-                  />
-                </div>
-              </div>
-
-              <button 
-                type="submit"
-                class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-100"
-              >
-                <LogIn class="w-5 h-5" />
-                Sign In
-              </button>
-            </form>
-
-            <div class="relative py-4">
-              <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-100"></div>
-              </div>
-              <div class="relative flex justify-center text-xs uppercase tracking-widest font-bold text-gray-400">
-                <span class="bg-white px-4">Or continue with</span>
-              </div>
-            </div>
-
-            <button 
-              @click="handleGithubLogin"
-              class="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-black transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <Github class="w-5 h-5" />
-              Github
-            </button>
-
-            <p class="text-center text-gray-500 font-medium">
-              Don't have an account? 
-              <button @click="toggleAuth" class="text-indigo-600 font-bold hover:underline ml-1">Create one</button>
-            </p>
+          <!-- Login Form -->
+          <div class="backface-hidden" :class="{ 'pointer-events-none opacity-0': !isLogin }">
+            <LoginForm 
+              v-if="isLogin"
+              @toggle="toggleAuth"
+              @success="handleSuccess"
+            />
           </div>
 
-          <div v-else class="space-y-8">
-            <div class="space-y-2">
-              <h2 class="text-3xl font-bold text-gray-900">Create account</h2>
-              <p class="text-gray-500">Start your journey to better mental health.</p>
-            </div>
-
-            <form @submit.prevent="handleSubmit" class="space-y-5">
-              <div class="space-y-2">
-                <label class="text-sm font-bold text-gray-700 ml-1">Full Name</label>
-                <div class="relative">
-                  <UserPlus class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input 
-                    v-model="name"
-                    type="text" 
-                    placeholder="John Doe"
-                    class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div class="space-y-2">
-                <label class="text-sm font-bold text-gray-700 ml-1">Email Address</label>
-                <div class="relative">
-                  <Mail class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input 
-                    v-model="email"
-                    type="email" 
-                    placeholder="name@company.com"
-                    class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div class="space-y-2">
-                <label class="text-sm font-bold text-gray-700 ml-1">Password</label>
-                <div class="relative">
-                  <Lock class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input 
-                    v-model="password"
-                    type="password" 
-                    placeholder="••••••••"
-                    class="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
-                    required
-                  />
-                </div>
-              </div>
-
-              <button 
-                type="submit"
-                class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-100"
-              >
-                <ArrowRight class="w-5 h-5" />
-                Get Started
-              </button>
-            </form>
-
-            <div class="relative py-4">
-              <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-100"></div>
-              </div>
-              <div class="relative flex justify-center text-xs uppercase tracking-widest font-bold text-gray-400">
-                <span class="bg-white px-4">Or sign up with</span>
-              </div>
-            </div>
-
-            <button 
-              @click="handleGithubLogin"
-              class="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-black transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <Github class="w-5 h-5" />
-              Github
-            </button>
-
-            <p class="text-center text-gray-500 font-medium">
-              Already have an account? 
-              <button @click="toggleAuth" class="text-indigo-600 font-bold hover:underline ml-1">Sign in</button>
-            </p>
+          <!-- Register Form -->
+          <div class="absolute inset-0 backface-hidden rotate-y-180 p-10" :class="{ 'pointer-events-none opacity-0': isLogin }">
+            <RegisterForm 
+              v-if="!isLogin"
+              @toggle="toggleAuth"
+              @success="handleSuccess"
+            />
           </div>
 
         </div>
@@ -267,5 +124,17 @@ const handleGithubLogin = () => {
 <style scoped>
 .perspective-1000 {
   perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }
 </style>

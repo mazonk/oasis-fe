@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { User } from "../types";
 import { authService } from "../services/authService";
-import type { IJwtPayload } from "@/types/interfaces/IJwtPayload";
+import type { IJwtPayload } from "../interfaces/IJwtPayload";
 import { jwtDecode } from "jwt-decode";
 
 function isTokenExpired(token: string): boolean {
@@ -22,7 +22,7 @@ export const useAuthStore = defineStore("auth", () => {
   const token = ref<string | null>(localStorage.getItem("token"));
   const isAuthenticated = computed(() => !!user.value);
 
-  async function login(username: string, password: string): Promise<void> {
+  async function login(email: string, password: string): Promise<void> {
     const response = await authService.login({ username, password });
     try {
       const token = await this.service.login(username, password);
