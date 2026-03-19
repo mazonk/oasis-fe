@@ -1,25 +1,49 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* 1. The Tailwind v4 Engine */
+@import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
-:root {
-  /* Brand Colors */
+/* 2. Your Oasis Theme Definitions */
+@theme {
   --color-oasis-lime: #B6CF33;
   --color-oasis-moss: #6B8834;
   --color-oasis-sky: #559ED2;
   --color-oasis-navy: #0B395A;
-  
-  /* Background/Neutral */
-  --color-oasis-bg: #F8FAF5; /* A very soft off-white with a hint of lime */
-  
-  /* Typography */
-  --font-main: 'Quicksand', sans-serif;
+  --color-oasis-bg: #F8FAF5;
+  --font-quicksand: "Quicksand", sans-serif;
 }
-body {
-  font-family: var(--font-main);
-  background-color: var(--color-oasis-bg);
-  color: var(--color-oasis-navy);
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
+
+/* 3. Base Styles (Global defaults) */
+@layer base {
+  body {
+    /* Updated to use your Oasis background but keeping your specific settings */
+    @apply antialiased text-oasis-navy bg-oasis-bg;
+    font-family: var(--font-quicksand);
+    font-feature-settings: "cv02", "cv05", "cv11";
+    margin: 0;
+  }
+}
+
+/* 4. Custom Utilities (Special classes like Perspective) */
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+}
+
+/* 5. Standard CSS (Scrollbars and External Imports) */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-200 rounded-full border-4 border-transparent bg-clip-content;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-300;
 }
