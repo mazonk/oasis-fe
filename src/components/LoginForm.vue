@@ -18,7 +18,7 @@ const handleSubmit = async () => {
   isLoading.value = true;
   error.value = null;
   try {
-    await authStore.login({ email: email.value, password: password.value });
+    await authStore.login(email.value, password.value );
     emit('success');
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Failed to sign in. Please check your credentials.';

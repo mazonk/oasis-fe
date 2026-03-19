@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { User } from "../types";
 import { authService } from "../services/authService";
-import type { IJwtPayload } from "../interfaces/IJwtPayload";
+import type { IAuthResponse } from "../interfaces/IAuthResponse";
 import { jwtDecode } from "jwt-decode";
 
 // function isTokenExpired(token: string): boolean {
@@ -20,24 +20,24 @@ import { jwtDecode } from "jwt-decode";
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: sessionStorage.getItem("jwtToken") || (null as string | null),
-    user: null as User | null,
+    memberId: sessionStorage.getItem("memberId") || (null as string | null),
     isAuthenticated: !!sessionStorage.getItem("jwtToken"),
   }),
   actions: {
 
   async login(email: string, password: string): Promise<void> {
-    const response = await authService.login({ email, password });
     try {
-      const token = await this.service.login(email, password);
+      const response = await authService.login(email, password);
+
 
       // if (isTokenExpired(token)) {
       //   throw new Error("Token is expired");
       // }
 
-      this.token = token;
-      sessionStorage.setItem("jwtToken", token);
+      this.token = response.token;
+      sessionStorage.setItem("jwtToken", response.token);
 
-      this.account = jwtDecode<IJwtPayload>(token);
+      this.account = jwtDecode<IAuthResponse>(response.token);
 
       this.showVolunteerModal = true;
     } catch (error: any) {
@@ -49,9 +49,9 @@ export const useAuthStore = defineStore('auth', {
 
   async register( fname: string, lname: string, email: string, password: string): Promise<void> {
     const response = await authService.register(fname, lname, email, password);
-    this.user = response.user;
+    this.memberId = response.memberId;
     this.token = response.token;
-    localStorage.setItem("token", response.token);
+    sessionStorage.setItem("jwtToken", response.token);
   },
 
   async logout() {

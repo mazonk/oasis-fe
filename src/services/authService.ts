@@ -1,24 +1,20 @@
 import api from '../api';
 import type { User } from '../types';
-
-export interface LoginResponse {
-  user: User;
-  token: string;
-}
+import type { IAuthResponse } from '../interfaces/IAuthResponse';
 
 export const authService = {
-  async login(email: string, password: string): Promise<LoginResponse> {
+  async login(email: string, password: string): Promise<IAuthResponse> {
     try {
-      const response = await api.post<LoginResponse>('Auth/login', {email, password });
+      const response = await api.post<IAuthResponse>('Auth/login', {email, password });
       return response.data;
     } catch (error: any) {
       console.log('Login error:', error.response?.data || error.message);
       throw error;
     }
   },
-  async register(fname: string, lname: string, email: string, password: string): Promise<LoginResponse> {
+  async register(fname: string, lname: string, email: string, password: string): Promise<IAuthResponse> {
     try {
-      const response = await api.post<LoginResponse>('Auth/register', { fname, lname, email, password });
+      const response = await api.post<IAuthResponse>('Auth/register', { fname, lname, email, password });
       return response.data;
     } catch (error: any) {
       console.log('Registration error:', error.response?.data || error.message);

@@ -4,12 +4,17 @@ import { Trophy, Users, Zap, Edit2, X } from 'lucide-vue-next';
 import { SOCIAL_INTERACTIONS } from '../constants';
 import { Motion } from '@motionone/vue';
 import gsap from 'gsap';
+import { useUserStore } from '../stores/UserStore';
+
+const userStore = useUserStore();
+const user = userStore.currentUser;
 
 const dailyGoal = ref({
   title: 'Daily Goal',
   description: 'Complete 2 social activities today to earn bonus XP.',
   progress: 50
 });
+console.log('Current user:', user);
 
 const isEditingGoal = ref(false);
 const editForm = ref({ ...dailyGoal.value });
@@ -40,7 +45,7 @@ onMounted(() => {
     
     <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 header-content">
       <div>
-        <h1 class="text-6xl font-black text-oasis-lime tracking-tight">Good morning, Katie!</h1>
+        <h1 class="text-6xl font-black text-oasis-lime tracking-tight">Good morning, {{ user?.member?.fname }}!</h1>
         <p class="text-oasis-navy/60 mt-2 font-medium">You're doing great today. Ready for some team vibes?</p>
       </div>
       <div class="flex items-center gap-4">
@@ -96,7 +101,7 @@ onMounted(() => {
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-oasis-bg rounded-[40px] p-8 flex flex-col sm:flex-row items-center gap-8 border border-oasis-lime/10">
+      <div class="rounded-[40px] p-8 flex flex-col sm:flex-row items-center gap-8 border border-oasis-lime/10">
         <div class="relative w-32 h-32 flex-shrink-0">
           <svg class="w-full h-full transform -rotate-90" viewBox="0 0 128 128">
             <circle cx="64" cy="64" r="58" stroke="currentColor" stroke-width="8" fill="transparent" class="text-white" />

@@ -17,7 +17,6 @@ const isLoading = ref(false);
 const error = ref<string | null>(null);
 
 const handleSubmit = async () => {
-    console.log('Submitting registration with:', { fname: fname.value, lname: lname.value, email: email.value });
   isLoading.value = true;
   error.value = null;
   try {
