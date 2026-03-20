@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Mail, Lock, LogIn, Github } from 'lucide-vue-next';
-import { useAuthStore } from '../stores/authStore';
+import { useAuthStore } from '../stores/AuthStore';
 
 const emit = defineEmits<{
   (e: 'toggle'): void;
@@ -77,7 +77,7 @@ const handleGithubLogin = () => {
 
       <button 
         type="submit"
-        class="w-full bg-oasis-moss text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-oasis-lime transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full bg-oasis-lime text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-oasis-moss transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed"
         :disabled="isLoading"
       >
         <LogIn v-if="!isLoading" class="w-5 h-5" />

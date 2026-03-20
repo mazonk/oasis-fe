@@ -62,7 +62,7 @@ const menuItems = [
       <div class="nav-user flex items-center gap-4">
         <div class="hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-2xl bg-gray-50 border border-gray-100">
           <UserIcon class="w-5 h-5 text-gray-400" />
-          <span class="text-sm font-semibold text-gray-900">{{user?.member?.fname}}</span>
+          <span class="text-sm font-semibold text-gray-900">User</span>
         </div>
         <button 
           @click="emit('logout')"

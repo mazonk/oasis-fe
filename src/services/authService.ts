@@ -1,32 +1,36 @@
-import api from '../api';
-import type { User } from '../types';
+import type { User } from '../interfaces/User';
+import instance from '../services/httpClient';
+import { mapToUser} from '../utils/mapper';
 import type { IAuthResponse } from '../interfaces/IAuthResponse';
 
-export const authService = {
-  async login(email: string, password: string): Promise<IAuthResponse> {
+export const AuthService = {
+  async login(email: String, password: String) {
     try {
-      const response = await api.post<IAuthResponse>('Auth/login', {email, password });
+      const response = await instance.post('Auth/login', { email, password });
       return response.data;
-    } catch (error: any) {
-      console.log('Login error:', error.response?.data || error.message);
-      throw error;
-    }
-  },
-  async register(fname: string, lname: string, email: string, password: string): Promise<IAuthResponse> {
-    try {
-      const response = await api.post<IAuthResponse>('Auth/register', { fname, lname, email, password });
-      return response.data;
-    } catch (error: any) {
-      console.log('Registration error:', error.response?.data || error.message);
+    } catch (error) {
+      console.error('Error during login:', error);
       throw error;
     }
   },
 
-  async logout(): Promise<void> {
-    await api.post('Auth/logout');
+   async register(fname: string, lname: string, email: string, password: string): Promise<IAuthResponse> {
+    try {
+      const response = await instance.post('Auth/register', { fname, lname, email, password });
+      return response.data;
+    } catch (error) {
+      console.error('Error during register:', error);
+      throw error;
+    }
   },
-  async getCurrentUser(): Promise<User> {
-    const response = await api.get<User>('Auth/me');
-    return response.data;
-  },
-};
+
+  async getUserById(userId: string) {
+    try {
+      const response = await instance.get(`user/${userId}`);
+      return mapToUser(response.data);
+    } catch (error) {
+      console.error('Error fetching user by id:', error);
+      throw error;
+    }
+  }
+}

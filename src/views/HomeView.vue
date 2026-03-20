@@ -4,10 +4,10 @@ import { Trophy, Users, Zap, Edit2, X } from 'lucide-vue-next';
 import { SOCIAL_INTERACTIONS } from '../constants';
 import { Motion } from '@motionone/vue';
 import gsap from 'gsap';
-import { useUserStore } from '../stores/UserStore';
+import { useAuthStore } from '../stores/AuthStore';
 
-const userStore = useUserStore();
-const user = userStore.currentUser;
+const authStore = useAuthStore();
+const user = authStore.memberId;
 
 const dailyGoal = ref({
   title: 'Daily Goal',
@@ -44,7 +44,7 @@ onMounted(() => {
     
     <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 header-content">
       <div>
-        <h1 class="text-6xl font-black text-oasis-lime tracking-tight">Good morning, {{ user?.member?.fname }}!</h1>
+        <h1 class="text-6xl font-black text-oasis-lime tracking-tight">Good morning, {{ user }}!</h1>
         <p class="text-oasis-navy/60 mt-2 font-medium">You're doing great today. Ready for some team vibes?</p>
       </div>
       <div class="flex items-center gap-4">

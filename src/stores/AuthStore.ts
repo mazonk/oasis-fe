@@ -1,13 +1,14 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { User } from "../types";
-import { authService } from "../services/authService";
+import router from '../router';
 import type { IAuthResponse } from "../interfaces/IAuthResponse";
 import { jwtDecode } from "jwt-decode";
+import { AuthService } from "../services/authService.ts"
 
 // function isTokenExpired(token: string): boolean {
 //    try {
-//       const decoded = jwtDecode<IJwtPayload>(token);
+//       const decoded = jwtDecode<IAuthResponse>(this.token);
 //       if (!decoded.) return true;
 
 //       const now = Math.floor(Date.now() / 1000);
@@ -17,29 +18,46 @@ import { jwtDecode } from "jwt-decode";
 //    }
 // }
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore('AuthStore', {
   state: () => ({
     token: sessionStorage.getItem("jwtToken") || (null as string | null),
     memberId: sessionStorage.getItem("memberId") || (null as string | null),
-    isAuthenticated: !!sessionStorage.getItem("jwtToken"),
+    isAuthenticated: false,
+    service: AuthService as AuthService
   }),
   actions: {
+    async initAuth() {
+      if (!this.token) return;
+
+      try {
+        const decoded = jwtDecode<IAuthResponse>(this.token);
+        this.isAuthenticated = true;
+      } catch (error) {
+        console.error('Failed to restore session:', error);
+        this.clearAuthData();
+      }
+    },
 
   async login(email: string, password: string): Promise<void> {
-    try {
-      const response = await authService.login(email, password);
+    console.log("Login attempt started");
+    try { 
+      const response = await this.service.login(email, password);
+      console.log(response)
+      this.token = response.token;
+      sessionStorage.setItem("jwtToken", response.token);
+      console.log(email, password)
 
+      router.push('/');
+      this.justLoggedIn = true;
+
+      await this.fetchCurrentUser();
 
       // if (isTokenExpired(token)) {
       //   throw new Error("Token is expired");
       // }
 
-      this.token = response.token;
-      sessionStorage.setItem("jwtToken", response.token);
-
       this.account = jwtDecode<IAuthResponse>(response.token);
 
-      this.showVolunteerModal = true;
     } catch (error: any) {
       throw error;
     } finally {
@@ -48,23 +66,32 @@ export const useAuthStore = defineStore('auth', {
   },
 
   async register( fname: string, lname: string, email: string, password: string): Promise<void> {
-    const response = await authService.register(fname, lname, email, password);
-    this.memberId = response.memberId;
-    this.token = response.token;
-    sessionStorage.setItem("jwtToken", response.token);
+    try {
+      const response = await this.service.register(fname, lname, email, password);
+      this.memberId = response.memberId;
+      this.token = response.token;
+      sessionStorage.setItem("jwtToken", response.token);
+    } catch (e) {
+      console.log(e)
+      throw e;
+    }
   },
 
   async logout() {
-    await authService.logout();
-    this.user = null;
-    this.token = null;
-    localStorage.removeItem("token");
+    try {
+      this.user = null;
+      this.token = null;
+    } catch (e) {
+      throw e;
+    } finally {
+        router.push('/auth');
+    }
   },
 
   async fetchCurrentUser() {
     if (this.token) {
       try {
-        this.user = await authService.getCurrentUser();
+        this.user = await this.service.getCurrentUser();
       } catch (error) {
         this.logout();
       }

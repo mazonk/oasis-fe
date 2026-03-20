@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterView } from 'vue-router'
 import { ref } from 'vue';
 import Navbar from './components/Navbar.vue';
 import HomeView from './views/HomeView.vue';
@@ -8,23 +9,19 @@ import RoadmapView from './views/RoadmapView.vue';
 import MoodPopup from './components/MoodPopup.vue';
 import AuthView from './views/AuthView.vue';
 import { Motion } from '@motionone/vue';
+import { useAuthStore } from './stores/AuthStore';
 
 const activeTab = ref('home');
-const isAuthenticated = ref(false);
-
-const handleLogin = () => {
-  isAuthenticated.value = true;
-};
+const authStore = useAuthStore();
 
 const handleLogout = () => {
-  isAuthenticated.value = false;
-  activeTab.value = 'home';
+  authStore.logout();
 };
 </script>
 
 <template>
   <div class="min-h-screen bg-[#FAFAFA] text-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900">
-    <template v-if="isAuthenticated">
+    <template v-if="authStore.isAuthenticated">
       <Navbar v-model:activeTab="activeTab" @logout="handleLogout" />
       
       <main class="min-h-screen transition-all duration-300">
@@ -51,7 +48,7 @@ const handleLogout = () => {
       <MoodPopup />
     </template>
     <template v-else>
-      <AuthView @login="handleLogin" />
+      <AuthView />
     </template>
   </div>
 </template>

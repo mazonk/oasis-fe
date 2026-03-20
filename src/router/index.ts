@@ -1,66 +1,47 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '../stores/authStore'
-import AuthView from '../views/AuthView.vue'
-import RoadmapView from '../views/RoadmapView.vue'
-import TeamView from '../views/TeamView.vue'
-import HomeView from '../views/HomeView.vue'
+import { authGuard } from '../router/authGuard';
+import { useAuthStore } from '../stores/AuthStore';
 
-const routes = [
-  {
-    path: '/auth',
-    name: 'Auth',
-    component: AuthView,
-    meta: { requiresAuth: false }
-  },
+const router = createRouter ({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
   {
     path: '/',
     name: 'Home',
-    component: HomeView,
-    meta: { requiresAuth: true }
+    component: () => import('../views/HomeView.vue'),
+    beforeEnter: authGuard,
   },
   {
     path: '/team',
     name: 'TeamView',
-    component: TeamView,
-    meta: { requiresAuth: true }
+    component: () => import('../views/TeamView.vue'),
+    beforeEnter: authGuard,
   },
 
     {
     path: '/roadmap',
     name: 'RoadMap',
-    component: RoadmapView,
-    meta: { requiresAuth: true }
+    component: () => import('../views/RoadmapView.vue'),
+    beforeEnter: authGuard,
   },
-
 
   {
     path: '/:pathMatch(.*)*',
     redirect: '/'
-  }
-]
-
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: routes
+  },
+  {
+    path: '/login',
+    name: 'auth',
+    component: () => import('@/views/AuthView.vue'),
+    beforeEnter: async (_to, _from, next) => {
+      const authStore = useAuthStore()
+      if (authStore.isAuthenticated) {
+        next({ name: 'Home' })  // ✅ capital H — matches the route definition
+      } else {
+        next()
+      }
+    }
+  },]
 })
-
-
-
-router.beforeEach(async (to, _from, next) => {
-  const authStore = useAuthStore();
-
-  const isAuthenticated = authStore.isAuthenticated;
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
-  if (requiresAuth && !isAuthenticated) {
-    next({ name: 'Auth' });
-  } 
-  else if (to.name === 'Auth' && isAuthenticated) {
-    next({ name: 'Home' });
-  } 
-  else {
-    next();
-  }
-});
 
 export default router
