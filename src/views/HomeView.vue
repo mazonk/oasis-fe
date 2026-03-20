@@ -7,7 +7,7 @@ import gsap from 'gsap';
 import { useAuthStore } from '../stores/AuthStore';
 
 const authStore = useAuthStore();
-const user = authStore.memberId;
+const user = authStore.loggedInMember;
 
 const dailyGoal = ref({
   title: 'Daily Goal',
@@ -44,7 +44,7 @@ onMounted(() => {
     
     <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 header-content">
       <div>
-        <h1 class="text-6xl font-black text-oasis-lime tracking-tight">Good morning, {{ user }}!</h1>
+        <h1 class="text-6xl font-black text-oasis-lime tracking-tight">Good morning, {{ user.fname }}!</h1>
         <p class="text-oasis-navy/60 mt-2 font-medium">You're doing great today. Ready for some team vibes?</p>
       </div>
       <div class="flex items-center gap-4">
@@ -70,11 +70,16 @@ onMounted(() => {
       >
         <div class="relative z-10 h-full flex flex-col">
           <div class="flex justify-between items-start mb-6">
-            <Zap class="w-10 h-10 text-white/50" />
-            <button @click="openEditModal" class="p-2 bg-white/20 hover:bg-white/40 rounded-xl transition-all opacity-0 group-hover:opacity-100">
-              <Edit2 class="w-4 h-4 text-white" />
-            </button>
-          </div>
+  <div class="flex items-center gap-3">
+      <Zap class="w-10 h-10 text-white/50" />
+      <span class="text-[32px] font-black uppercase tracking-widest bg-white/20 text-white px-3 py-1.5 rounded-full">
+        Coming soon
+      </span>
+    </div>
+    <button @click="openEditModal" class="p-2 bg-white/20 hover:bg-white/40 rounded-xl transition-all opacity-0 group-hover:opacity-100">
+      <Edit2 class="w-4 h-4 text-white" />
+    </button>
+  </div>
           <h2 class="text-2xl font-black mb-2">{{ dailyGoal.title }}</h2>
           <p class="text-white/80 text-sm font-medium mb-8 leading-relaxed">{{ dailyGoal.description }}</p>
           

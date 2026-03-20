@@ -13,13 +13,6 @@ export interface Mood {
   color: string;
 }
 
-export interface TeamInvitation {
-  id: string;
-  teamName: string;
-  invitedBy: string;
-  status: 'pending' | 'accepted' | 'declined';
-}
-
 export interface Activity {
   id: string;
   title: string;

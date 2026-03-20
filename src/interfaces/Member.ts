@@ -1,24 +1,12 @@
-import type { Level } from './Level';
-import type { Team } from './Team';
-import type { MemberMood } from './MemberMood';
-import type { User } from './User';
 export interface Member {
   memberId: number;
   fname: string;
   lname: string;
   email: string;
-  phone?: string;
-  dob?: Date | string;
-
-  levelId?: number;
-  level?: Level;
-
-  teamId?: number;
-  team?: Team;
-
-  memberMoods?: MemberMood[];
-  user?: User;
+  phone: string | null;
+  dob: string | null;
+  teamName: string | null;
+  experience: number | null;
+  levelId: number | null;
+  levelName: string | null;
 }
-export const getMemberDisplayName = (member: Member): string => {
-  return member.fname;
-};

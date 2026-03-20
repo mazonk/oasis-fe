@@ -24,7 +24,7 @@ export const AuthService = {
     }
   },
 
-  async getUserById(userId: string) {
+  async getMemberById(userId: string) {
     try {
       const response = await instance.get(`user/${userId}`);
       return mapToUser(response.data);

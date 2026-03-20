@@ -1,13 +1,9 @@
-import { Level } from "./Level";
-import { Member } from "./Member";
-
 export interface Team {
   teamId: number;
   name: string;
-  description?: string;
-  leaderId?: number;
-  leader?: Member;
-  levelId?: number;
-  level?: Level;
-  members?: Member[];
+  description: string | null;
+  leaderId: number;
+  levelId: number;
+  levelName: string | null;
+  experience: number;
 }

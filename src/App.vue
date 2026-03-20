@@ -11,18 +11,23 @@ import AuthView from './views/AuthView.vue';
 import { Motion } from '@motionone/vue';
 import { useAuthStore } from './stores/AuthStore';
 
-const activeTab = ref('home');
+const activeTab = ref(localStorage.getItem('activeTab') || 'home');
 const authStore = useAuthStore();
 
 const handleLogout = () => {
   authStore.logout();
+};
+
+const setActiveTab = (tab: string) => {
+  activeTab.value = tab;
+  localStorage.setItem('activeTab', tab);
 };
 </script>
 
 <template>
   <div class="min-h-screen bg-[#FAFAFA] text-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900">
     <template v-if="authStore.isAuthenticated">
-      <Navbar v-model:activeTab="activeTab" @logout="handleLogout" />
+      <Navbar v-model:activeTab="activeTab" @update:activeTab="setActiveTab(activeTab)" @logout="handleLogout" />
       
       <main class="min-h-screen transition-all duration-300">
         <div class="p-6 md:p-12 lg:p-16">
