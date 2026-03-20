@@ -29,7 +29,7 @@ Vue 3 web app for the Oasis team wellness platform.
 2. Configure the API base URL in `src/services/httpClient.ts`:
    ```ts
    const instance = axios.create({
-     baseURL: 'https://localhost:5001/api',
+     baseURL: 'https://localhost:5000/api',
    });
    ```
 
