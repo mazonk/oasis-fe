@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { onMounted, ref,nextTick } from 'vue';
+import { onMounted, ref, nextTick, watch } from 'vue';
 import { gsap } from 'gsap';
 import { 
   Coffee, Trees, Gamepad2, Palette, Plus, 
-  Calendar, Zap, Star, Loader2, Heart, Users 
+  Calendar, Zap, Star, Loader2, Heart, Users, HelpCircle
 } from 'lucide-vue-next';
 import { useActivityStore } from '../stores/activityStore';
 import { cn } from '../utils/utils';
 import { Motion } from '@motionone/vue';
 
-// 1. Store Initialization
 const activityStore = useActivityStore();
 const isLoading = ref(true);
 
@@ -21,6 +20,7 @@ const iconMap: Record<string, any> = {
   'Palette': Palette,
   'Wellness': Heart,
   'Social': Users,
+  'Food & Drink': Coffee,
 };
 
 const categoryColors: Record<string, string> = {
@@ -31,32 +31,53 @@ const categoryColors: Record<string, string> = {
   'Games': 'bg-pink-100 text-pink-600',
   'Express Yourself': 'bg-purple-100 text-purple-600',
   'Food & Drink': 'bg-indigo-100 text-indigo-600',
+  'Default': 'bg-gray-100 text-gray-500',
 };
 
-// 3. Fetch data & Run Animations
+// Helper to get color safely
+const getCategoryStyle = (categoryName?: string) => {
+  return categoryColors[categoryName || ''] || categoryColors['Default'];
+};
+
+watch(isLoading, async (newVal) => {
+  if (newVal === false) {
+    // Wait for Vue to remove the Loader and render the Cards
+    await nextTick();
+    // A tiny delay ensures the browser has painted the elements
+    setTimeout(() => {
+      runAnimations();
+    }, 50); 
+  }
+});
+
 onMounted(async () => {
   try {
     await activityStore.fetchActivities();
   } finally {
     isLoading.value = false;
-    await nextTick();
+  }
+});
 
-    runAnimations();
-    
-    // Staggered GSAP Entrance
+const runAnimations = () => {
+  const cards = document.querySelectorAll('.activity-card');
+  
+  if (cards.length > 0) {
     const tl = gsap.timeline();
-    
     tl.from('.activities-header', { 
       y: -20, opacity: 0, duration: 0.8, ease: 'power3.out' 
     })
-    .from('.activity-card', { 
-      scale: 0.9, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'back.out(1.7)' 
+    .from(cards, { // Pass the direct elements instead of a string selector
+      scale: 0.9, 
+      opacity: 0, 
+      duration: 0.6, 
+      stagger: 0.1, 
+      ease: 'back.out(1.7)' 
     }, "-=0.4")
     .from('.info-section', { 
       y: 30, opacity: 0, duration: 1, ease: 'power2.out' 
     }, "-=0.2");
   }
-});
+};
 </script>
 
 <template>
@@ -85,32 +106,32 @@ onMounted(async () => {
         class="activity-card bg-white rounded-[40px] p-8 shadow-sm border border-gray-50 flex flex-col"
       >
         <div class="flex items-start justify-between mb-6">
-          <div :class="cn('p-4 rounded-3xl', categoryColors[activity.category?.name] || 'bg-gray-100')">
-            <component :is="iconMap[activity.icon] || Coffee" class="w-8 h-8" />
+          <div :class="cn('p-4 rounded-3xl transition-colors', getCategoryStyle(activity.category?.name))">
+            <component :is="iconMap[activity.icon] || HelpCircle" class="w-8 h-8" />
           </div>
           <div class="flex flex-col items-end">
             <div class="flex items-center gap-1 text-amber-500 font-black text-lg">
               <Zap class="w-5 h-5 fill-current" />
               {{ activity.experience }} XP
             </div>
-            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
-              Reward
-            </div>
+            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Reward</div>
           </div>
         </div>
 
         <div class="flex-1">
-          <span :class="cn('text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-3 inline-block', categoryColors[activity.category?.name])">
+          <span :class="cn('text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-3 inline-block', getCategoryStyle(activity.category?.name))">
             {{ activity.category?.name || 'General' }}
           </span>
           <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ activity.title }}</h3>
-          <p class="text-gray-500 text-sm leading-relaxed line-clamp-2">{{ activity.description }}</p>
+          <p class="text-gray-500 text-sm leading-relaxed line-clamp-2">
+            {{ activity.description || 'No description provided.' }}
+          </p>
         </div>
 
         <div class="mt-8 pt-6 border-t border-gray-50 flex items-center justify-between">
           <div class="flex items-center gap-2 text-indigo-600">
             <Star class="w-4 h-4 fill-current" />
-            <span class="text-xs font-bold">+{{ activity.experience }} XP for organizing</span>
+            <span class="text-xs font-bold">+{{ Math.round(activity.experience * 0.2) }} XP for organizing</span>
           </div>
           <button class="flex items-center gap-2 text-sm font-bold text-gray-900 hover:text-indigo-600 transition-colors group">
             <Calendar class="w-4 h-4 transition-transform group-hover:rotate-12" />
@@ -120,26 +141,20 @@ onMounted(async () => {
       </Motion>
     </div>
 
+    <div v-if="!isLoading && activityStore.activities.length === 0" class="text-center py-20 bg-gray-50 rounded-[40px] border-2 border-dashed border-gray-200">
+      <p class="text-gray-500 font-medium">No activities found. Be the first to propose one!</p>
+    </div>
+
     <section class="info-section bg-indigo-50 rounded-[40px] p-10 border border-indigo-100">
       <div class="flex flex-col md:flex-row items-center gap-10">
         <div class="flex-1">
           <h2 class="text-3xl font-bold text-indigo-900 mb-4">Why organize?</h2>
           <p class="text-indigo-800/70 leading-relaxed mb-6">
-            Taking initiative is rewarded! You get extra XP for organizing activities for your team. It helps everyone stay connected and improves the collective health score.
+            Taking initiative is rewarded! You get extra XP for organizing activities for your team. It helps everyone stay connected.
           </p>
-          <div class="flex gap-4">
-            <div class="bg-white px-4 py-2 rounded-xl text-indigo-600 font-bold text-sm shadow-sm">
-              +20% Initiative Bonus
-            </div>
-            <div class="bg-white px-4 py-2 rounded-xl text-indigo-600 font-bold text-sm shadow-sm">
-              Team Multiplier
-            </div>
-          </div>
         </div>
         <div class="w-full md:w-64 h-64 bg-indigo-200 rounded-[40px] flex items-center justify-center relative overflow-hidden shadow-inner">
            <div class="w-32 h-32 bg-indigo-400 rounded-full animate-bounce shadow-xl" />
-           <div class="absolute top-10 left-10 w-10 h-10 bg-indigo-300 rounded-full blur-sm" />
-           <div class="absolute bottom-10 right-10 w-16 h-16 bg-indigo-300 rounded-full blur-sm" />
         </div>
       </div>
     </section>

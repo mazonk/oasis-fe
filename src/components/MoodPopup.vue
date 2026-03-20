@@ -24,6 +24,9 @@ const checkTime = () => {
   }
 };
 
+defineExpose({
+  isOpen
+});
 let interval: any;
 
 onMounted(() => {

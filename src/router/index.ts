@@ -36,7 +36,7 @@ const router = createRouter ({
     beforeEnter: async (_to, _from, next) => {
       const authStore = useAuthStore()
       if (authStore.isAuthenticated) {
-        next({ name: 'Home' })  // ✅ capital H — matches the route definition
+        next({ name: 'Home' })
       } else {
         next()
       }

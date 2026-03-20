@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { activityService } from '../services/activityService';
 import type { Activity } from '../interfaces/Activity';
-import { activityService  } from '../services/activityService';
 
 export const useActivityStore = defineStore('activityStore', {
   state: () => ({
@@ -9,14 +8,15 @@ export const useActivityStore = defineStore('activityStore', {
   }),
 
   actions: {
-    async fetchActivities(): Promise<void> {
+    async fetchActivities() {
       try {
         const data = await activityService.getActivities();
-        this.activities = data;
-      } catch (e: any) {
-          console.error("Error fetching all activities:", e);
-          throw e;
-        }
+        // Ensure we are assigning a fresh array to trigger Vue's reactivity
+        this.activities = [...data]; 
+        console.log("Store activities updated:", this.activities.length);
+      } catch (e) {
+        console.error("Store error:", e);
+      }
     },
   },
 });
