@@ -1,7 +1,7 @@
 import { Mood, Activity, SocialInteraction, TeamInvitation } from './types';
 
 export const MOODS: Mood[] = [
-  { id: 'excited', label: 'Excited', emoji: '😊', color: 'bg-pink-400' },
+  { id: 'excited', label: 'Excited', emoji: '🤩', color: 'bg-pink-400' },
   { id: 'joyful', label: 'Joyful', emoji: '🥰', color: 'bg-rose-400' },
   { id: 'grateful', label: 'Grateful', emoji: '😌', color: 'bg-purple-400' },
   { id: 'energized', label: 'Energized', emoji: '⚡', color: 'bg-indigo-400' },

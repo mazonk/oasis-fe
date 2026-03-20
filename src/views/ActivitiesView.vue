@@ -13,6 +13,26 @@ const activityStore = useActivityStore();
 const isLoading = ref(activityStore.activities.length === 0); // Start as loading if no activities
 const activities = computed(()=> activityStore.activities)
 
+// add below existing refs
+const showSuggestModal = ref(false);
+const suggestLocation = ref('');
+const suggestWeather = ref(false);
+const suggestTeamSize = ref<number | undefined>(undefined);
+  const showComingSoon = ref(false);
+
+async function handleSuggest() {
+  await activityStore.suggestActivity({
+    location: suggestLocation.value || undefined,
+    includeWeather: suggestWeather.value,
+    teamSize: suggestTeamSize.value,
+  });
+}
+
+function closeSuggestModal() {
+  showSuggestModal.value = false;
+  activityStore.clearSuggestion();
+}
+
 // 2. Mappings
 const iconMap: Record<string, any> = {
   'Coffee': Coffee,
@@ -84,15 +104,18 @@ onMounted(async () => {
 <template>
   <div class="space-y-8 max-w-7xl mx-auto p-6">
     <header class="activities-header flex items-center justify-between">
-      <div>
-        <h1 class="text-4xl font-bold text-gray-900 tracking-tight">Activities</h1>
-        <p class="text-gray-500 mt-2">Join or organize activities to boost team spirit and earn XP.</p>
-      </div>
-      <button class="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-indigo-700 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-indigo-100">
-        <Plus class="w-5 h-5" />
-        Propose New
-      </button>
-    </header>
+  <div>
+    <h1 class="text-4xl font-bold text-gray-900 tracking-tight">Activities</h1>
+    <p class="text-gray-500 mt-2">Join or organize activities to boost team spirit and earn XP.</p>
+  </div>
+  <div class="flex gap-3">
+
+    <button      @click="showSuggestModal = true" class="bg-indigo-600 cursor-pointer text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-indigo-700 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-indigo-100">
+      <Plus class="w-5 h-5" />
+      Propose New
+    </button>
+  </div>
+</header>
 
     <div v-if="isLoading" class="flex flex-col items-center justify-center py-20">
       <Loader2 class="w-12 h-12 text-indigo-500 animate-spin mb-4" />
@@ -161,4 +184,132 @@ onMounted(async () => {
       </div>
     </section>
   </div>
+  <!-- AI Suggest Modal -->
+<Teleport to="body">
+  <Transition enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0"
+  enter-to-class="opacity-100" leave-active-class="transition duration-150 ease-in"
+  leave-from-class="opacity-100" leave-to-class="opacity-0">
+  <div v-if="showComingSoon"
+    class="fixed inset-0 bg-black/30 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
+    @click.self="showComingSoon = false">
+    <Transition enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0 scale-95"
+      enter-to-class="opacity-100 scale-100" leave-active-class="transition duration-150 ease-in"
+      leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
+      <div v-if="showComingSoon" class="bg-white rounded-[32px] p-8 w-full max-w-sm shadow-xl text-center">
+        <div class="w-16 h-16 bg-amber-100 rounded-3xl flex items-center justify-center mx-auto mb-4">
+          <Sparkles class="w-8 h-8 text-amber-500" />
+        </div>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Coming Soon!</h2>
+        <p class="text-sm text-gray-400 mb-6">We're working on this feature. Stay tuned!</p>
+        <button
+          @click="showComingSoon = false"
+          class="w-full py-3 rounded-2xl bg-amber-500 text-sm font-bold text-white hover:bg-amber-600 transition-colors cursor-pointer"
+        >
+          Got it
+        </button>
+      </div>
+    </Transition>
+  </div>
+</Transition>
+  <Transition enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0"
+    enter-to-class="opacity-100" leave-active-class="transition duration-150 ease-in"
+    leave-from-class="opacity-100" leave-to-class="opacity-0">
+    <div v-if="showSuggestModal"
+      class="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      @click.self="closeSuggestModal">
+      <Transition enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0 scale-95"
+        enter-to-class="opacity-100 scale-100" leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
+        <div v-if="showSuggestModal" class="bg-white rounded-[32px] p-8 w-full max-w-md shadow-xl">
+
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h2 class="text-xl font-bold text-gray-900">AI Activity Suggestion</h2>
+              <p class="text-sm text-gray-400 mt-1">Let AI pick the perfect activity for your team.</p>
+            </div>
+            <button @click="closeSuggestModal"
+              class="w-9 h-9 flex items-center justify-center rounded-2xl hover:bg-gray-100 transition-colors text-gray-400 cursor-pointer">
+              <X class="w-5 h-5" />
+            </button>
+          </div>
+
+          <!-- Result card -->
+          <div v-if="activityStore.suggestedActivity"
+  class="mb-6 p-6 bg-amber-50 rounded-3xl border border-amber-100">
+  <div class="flex items-center justify-between mb-3">
+    <span :class="cn('text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full', getCategoryStyle(activityStore.suggestedActivity.categoryName))">
+      {{ activityStore.suggestedActivity.categoryName }}
+    </span>
+    <div class="flex items-center gap-1 text-amber-500 font-black">
+      <Zap class="w-4 h-4 fill-current" />
+      {{ activityStore.suggestedActivity.experience }} XP
+    </div>
+  </div>
+  <h3 class="font-bold text-gray-900 text-lg mb-2">{{ activityStore.suggestedActivity.title }}</h3>
+  <p class="text-sm text-gray-500 leading-relaxed">{{ activityStore.suggestedActivity.description }}</p>
+  <p class="text-xs text-gray-400 mt-3">
+    {{ activityStore.suggestedActivity.minMember }}–{{ activityStore.suggestedActivity.maxMember }} members
+  </p>
+  <button
+  @click="showComingSoon = true"
+  class="mt-4 w-full py-2.5 rounded-2xl bg-amber-500 text-sm font-bold text-white hover:bg-amber-600 transition-colors cursor-pointer"
+>
+  Let's do it!
+</button>
+</div>
+
+          <div v-if="activityStore.suggestionError" class="mb-6 p-4 bg-rose-50 rounded-2xl border border-rose-100">
+            <p class="text-sm text-rose-600">{{ activityStore.suggestionError }}</p>
+          </div>
+
+          <!-- Form -->
+          <div class="space-y-4">
+            <div>
+              <label class="text-sm font-semibold text-gray-700 block mb-2">
+                Location
+                <span class="text-gray-400 font-normal ml-1">(optional)</span>
+              </label>
+              <div class="relative">
+                <MapPin class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+                <input v-model="suggestLocation" type="text" placeholder="e.g. Copenhagen, Denmark"
+                  class="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent text-gray-900 placeholder-gray-300 transition-all" />
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+              <label class="text-sm font-semibold text-gray-700">Include live weather</label>
+              <button
+                @click="suggestWeather = !suggestWeather"
+                :class="suggestWeather ? 'bg-amber-500' : 'bg-gray-200'"
+                class="relative w-11 h-6 rounded-full transition-colors duration-200 cursor-pointer"
+              >
+                <span :class="suggestWeather ? 'translate-x-6' : 'translate-x-1'"
+                  class="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 block" />
+              </button>
+            </div>
+
+            <div>
+              <label class="text-sm font-semibold text-gray-700 block mb-2">
+                Team size
+                <span class="text-gray-400 font-normal ml-1">(optional)</span>
+              </label>
+              <input v-model.number="suggestTeamSize" type="number" min="2" max="100" placeholder="e.g. 8"
+                class="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent text-gray-900 placeholder-gray-300 transition-all" />
+            </div>
+
+            <button
+              @click="handleSuggest"
+              :disabled="activityStore.isSuggesting"
+              class="w-full py-3 rounded-2xl bg-amber-500 text-sm font-semibold text-white hover:bg-amber-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Loader2 v-if="activityStore.isSuggesting" class="w-4 h-4 animate-spin" />
+              <Sparkles v-else class="w-4 h-4" />
+              {{ activityStore.isSuggesting ? 'Thinking...' : activityStore.suggestedActivity ? 'Suggest Another' : 'Suggest Activity' }}
+            </button>
+          </div>
+        </div>
+      </Transition>
+    </div>
+  </Transition>
+</Teleport>
 </template>

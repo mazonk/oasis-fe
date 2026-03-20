@@ -53,8 +53,8 @@ onMounted(() => {
             <Trophy class="w-6 h-6 text-oasis-moss" />
           </div>
           <div>
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Current XP</p>
-            <p class="text-2xl font-black text-oasis-navy">2,450</p>
+            <p class="text-[12px] font-bold text-gray-400 uppercase text-center tracking-widest">Prize of the month</p>
+            <p class="text-[20px] font-black text-oasis-navy">Wellness getaway</p>
           </div>
         </div>
       </div>

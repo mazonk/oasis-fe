@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
-import { UserPlus, Check, X, ShieldCheck, Users, Mail } from 'lucide-vue-next';
+import { UserPlus, Check, X, ShieldCheck, Users, Mail, Zap } from 'lucide-vue-next';
 import gsap from 'gsap';
 import { useTeamStore } from '../stores/TeamStore';
 import { useInvitationStore } from '../stores/InvitationStore';
@@ -170,24 +170,44 @@ watch(team, () => {
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
             <div v-if="team"
-              class="p-6 bg-indigo-50 rounded-3xl border border-indigo-100 team-card transition-shadow duration-300 group"
-            >
-              <div class="flex items-start justify-between mb-4">
-                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-300">
-                  <ShieldCheck class="w-5 h-5 text-indigo-600" />
-                </div>
-                <button
-                  @click="openInviteModal"
-                  class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-indigo-600 text-xs font-semibold rounded-xl hover:bg-indigo-600 hover:text-white transition-all duration-200 shadow-sm cursor-pointer"
-                >
-                  <UserPlus class="w-3.5 h-3.5" />
-                  Invite
-                </button>
-              </div>
-              <h3 class="font-bold text-gray-900">{{ team.name }}</h3>
-              <p v-if="team.description" class="text-xs text-gray-400 mt-2">{{ team.description }}</p>
-              <p class="text-xs text-indigo-500 font-medium mt-2">{{ team.levelName ?? 'Unranked' }}</p>
-            </div>
+  class="p-6 bg-indigo-50 rounded-3xl border border-indigo-100 team-card transition-shadow duration-300 group"
+>
+  <div class="flex items-start justify-between mb-4">
+    <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-300">
+      <ShieldCheck class="w-5 h-5 text-indigo-600" />
+    </div>
+    <button
+      @click="openInviteModal"
+      class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-indigo-600 text-xs font-semibold rounded-xl hover:bg-indigo-600 hover:text-white transition-all duration-200 shadow-sm cursor-pointer"
+    >
+      <UserPlus class="w-3.5 h-3.5" />
+      Invite
+    </button>
+  </div>
+
+  <h3 class="font-bold text-gray-900 text-lg">{{ team.name }}</h3>
+  <p v-if="team.description" class="text-xs text-gray-400 mt-1">{{ team.description }}</p>
+
+  <div class="mt-4 flex items-center justify-between">
+    <div class="flex items-center gap-1.5">
+      <span class="text-xs font-bold text-indigo-600 bg-indigo-100 px-2.5 py-1 rounded-full">
+        {{ team.levelName ?? 'Unranked' }}
+      </span>
+    </div>
+    <div class="flex items-center gap-1 text-amber-500 font-black text-sm">
+      <Zap class="w-4 h-4 fill-current" />
+      {{ team.experience }} XP
+    </div>
+  </div>
+
+  <div class="mt-4 pt-4 border-t border-indigo-100 flex items-center justify-between">
+    <span class="text-xs text-gray-400 font-medium">Team mood</span>
+    <div class="flex items-center gap-1.5">
+      <span class="text-lg">🤩</span>
+      <span class="text-xs font-bold text-pink-500">Excited</span>
+    </div>
+  </div>
+</div>
 
             <button v-else
               @click="openCreateModal"

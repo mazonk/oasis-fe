@@ -94,7 +94,7 @@ const closePopup = () => {
             :key="mood.id"
             as="button"
             @click="closePopup"
-            class="mood-item flex flex-col items-center gap-2"
+            class="mood-item flex flex-col items-center gap-2  cursor-pointer"
           >
             <div :class="cn('w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm', mood.color)">
               {{ mood.emoji }}
