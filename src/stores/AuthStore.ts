@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('AuthStore', {
   state: () => ({
     token: sessionStorage.getItem("jwtToken") || (null as string | null),
     memberId: sessionStorage.getItem("memberId") || (null as string | null),
-    isAuthenticated: false,
+    isAuthenticated: sessionStorage.getItem("jwtToken") ? true : false,
     service: AuthService as AuthService
   }),
   actions: {
@@ -38,64 +38,62 @@ export const useAuthStore = defineStore('AuthStore', {
       }
     },
 
-  async login(email: string, password: string): Promise<void> {
-    console.log("Login attempt started");
-    try { 
-      const response = await this.service.login(email, password);
-      console.log(response)
-      this.token = response.token;
-      sessionStorage.setItem("jwtToken", response.token);
-      console.log(email, password)
-
-      router.push('/');
-      this.justLoggedIn = true;
-
-      await this.fetchCurrentUser();
-
-      // if (isTokenExpired(token)) {
-      //   throw new Error("Token is expired");
-      // }
-
-      this.account = jwtDecode<IAuthResponse>(response.token);
-
-    } catch (error: any) {
-      throw error;
-    } finally {
-      this.loading = false;
-    }
-  },
-
-  async register( fname: string, lname: string, email: string, password: string): Promise<void> {
-    try {
-      const response = await this.service.register(fname, lname, email, password);
-      this.memberId = response.memberId;
-      this.token = response.token;
-      sessionStorage.setItem("jwtToken", response.token);
-    } catch (e) {
-      console.log(e)
-      throw e;
-    }
-  },
-
-  async logout() {
-    try {
-      this.user = null;
-      this.token = null;
-    } catch (e) {
-      throw e;
-    } finally {
-        router.push('/auth');
-    }
-  },
-
-  async fetchCurrentUser() {
-    if (this.token) {
+    async login(email: string, password: string): Promise<void> {
+      console.log("Login attempt started");
       try {
-        this.user = await this.service.getCurrentUser();
-      } catch (error) {
-        this.logout();
+        const response = await this.service.login(email, password);
+        this.token = response.token;
+        this.memberId = response.memberId;
+        sessionStorage.setItem("jwtToken", response.token);
+
+        router.push('/');
+        this.justLoggedIn = true;
+
+        // if (isTokenExpired(token)) {
+        //   throw new Error("Token is expired");
+        // }
+
+        this.account = jwtDecode<IAuthResponse>(response.token);
+
+      } catch (error: any) {
+        throw error;
+      } finally {
+        this.loading = false;
       }
+    },
+
+    async register(fname: string, lname: string, email: string, password: string): Promise<void> {
+      try {
+        const response = await this.service.register(fname, lname, email, password);
+        this.memberId = response.memberId;
+        this.token = response.token;
+        sessionStorage.setItem("jwtToken", response.token);
+      } catch (e) {
+        console.log(e)
+        throw e;
+      }
+    },
+
+    async logout() {
+      try {
+        console.log("Logout attempt started");
+
+        this.user = null;
+        this.token = null;
+        sessionStorage.removeItem("jwtToken");
+      } catch (e) {
+        throw e;
+      } finally {
+        window.location.reload();
+      }
+    },
+
+    clearAuthData() {
+      this.token = null;
+      this.memberId = null;
+      this.isAuthenticated = false;
+      sessionStorage.removeItem("jwtToken");
+      sessionStorage.removeItem("memberId");
     }
-  }
   }
 });
