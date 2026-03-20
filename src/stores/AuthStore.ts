@@ -23,7 +23,7 @@ export const useAuthStore = defineStore('AuthStore', {
     token: sessionStorage.getItem("jwtToken") || (null as string | null),
     memberId: sessionStorage.getItem("memberId") || (null as string | null),
     isAuthenticated: sessionStorage.getItem("jwtToken") ? true : false,
-    service: AuthService as AuthService
+    service: AuthService as typeof AuthService
   }),
   actions: {
     async initAuth() {
