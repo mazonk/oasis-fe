@@ -7,8 +7,14 @@ import { cn } from '../utils/utils';
 import { isWithinInterval, setHours, setMinutes } from 'date-fns';
 import { Motion } from '@motionone/vue';
 
+// 1. Correct placement: Top level
 const isOpen = ref(false);
 const lastCheck = ref(0);
+
+// 2. Expose isOpen so the parent can change it
+defineExpose({
+  isOpen
+});
 
 const checkTime = () => {
   const now = new Date();
@@ -18,27 +24,23 @@ const checkTime = () => {
   const isWorkTime = isWithinInterval(now, { start: workStart, end: workEnd });
   const twoHoursInMs = 2 * 60 * 60 * 1000;
 
-  if (isWorkTime && now.getTime() - lastCheck.value > twoHoursInMs) {
+  if (isOpen = true || isWorkTime && now.getTime() - lastCheck.value > twoHoursInMs) {
     isOpen.value = true;
     lastCheck.value = now.getTime();
   }
 };
 
-defineExpose({
-  isOpen
-});
 let interval: any;
 
 onMounted(() => {
   interval = setInterval(checkTime, 60000);
-  checkTime();
+  // Optional: checkTime(); // Uncomment if you want it to pop up immediately on load
 });
 
 onUnmounted(() => {
   clearInterval(interval);
 });
 
-// Animate when modal shows up
 watch(isOpen, (newVal) => {
   if (newVal) {
     setTimeout(() => {
@@ -48,7 +50,6 @@ watch(isOpen, (newVal) => {
         duration: 0.5,
         ease: 'back.out(1.7)'
       });
-
       gsap.from('.mood-item', {
         y: 20,
         opacity: 0,
@@ -76,12 +77,9 @@ const closePopup = () => {
 
 <template>
   <Transition name="modal">
-    <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div class="mood-modal-content bg-white rounded-[32px] p-8 max-w-md w-full shadow-2xl relative overflow-hidden">
-        <button
-          @click="closePopup"
-          class="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors"
-        >
+    <div v-if="isOpen" class="fixed inset-64 z-50 flex items-center justify-center p-4">
+      <div class="mood-modal-content bg-white rounded-[32px] p-8 max-w-md w-full shadow-2xl relative">
+        <button @click="closePopup" class="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full">
           <X class="w-5 h-5 text-gray-400" />
         </button>
 
@@ -95,35 +93,16 @@ const closePopup = () => {
             v-for="mood in MOODS"
             :key="mood.id"
             as="button"
-            :while-hover="{ scale: 1.05 }"
-            :while-tap="{ scale: 0.95 }"
             @click="closePopup"
             class="mood-item flex flex-col items-center gap-2"
           >
-            <div :class="cn(
-              'w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm',
-              mood.color
-            )">
+            <div :class="cn('w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm', mood.color)">
               {{ mood.emoji }}
             </div>
-            <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wider">
-              {{ mood.label }}
-            </span>
+            <span class="text-[10px] font-medium text-gray-500 uppercase tracking-wider">{{ mood.label }}</span>
           </Motion>
         </div>
       </div>
     </div>
   </Transition>
 </template>
-
-<style scoped>
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
-}
-</style>

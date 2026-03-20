@@ -12,6 +12,7 @@ import {
   User as UserIcon,
 } from "lucide-vue-next";
 import { cn } from "../utils/utils";
+import { useAuthStore } from "../stores/AuthStore";
 
 defineProps<{
   activeTab: string;
@@ -22,11 +23,14 @@ const emit = defineEmits<{
   (e: "logout"): void;
 }>();
 
-const moodPopup = ref<any>(null);
+const moodPopup = ref<InstanceType<typeof MoodPopup> | null>(null);
 
 const openMoodPopup = () => {
+  console.log("Mascot clicked!");
   if (moodPopup.value) {
-    moodPopup.value.isOpen = true;
+    moodPopup.value.isOpen = true; 
+  } else {
+    console.error("Popup ref not found");
   }
 };
 
@@ -42,12 +46,12 @@ const menuItems = [
 <template>
   <nav class="w-full bg-gradient-to-r from-oasis-navy via-oasis-sky to-oasis-lime sticky top-0 z-40 px-6 py-3 shadow-lg backdrop-blur-md bg-opacity-90">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <div class="nav-logo flex items-center gap-3">
-        <Mascot 
+      <div  @click="openMoodPopup  
+" class="nav-logo flex items-center gap-3">
+        <Mascot
           size="40px" 
           color="#4F46E5" 
-          class="cursor-pointer hover:scale-110 transition-transform" 
-          @click="openMoodPopup" 
+          class="cursor-pointer hover:scale-110 transition-transform"
         />
         <span class="font-bold text-xl tracking-tight text-gray-100">.oasis</span>
         

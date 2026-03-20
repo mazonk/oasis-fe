@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, nextTick, watch } from 'vue';
+import { onMounted, ref, nextTick, watch, computed } from 'vue';
 import { gsap } from 'gsap';
 import { 
   Coffee, Trees, Gamepad2, Palette, Plus, 
@@ -10,7 +10,8 @@ import { cn } from '../utils/utils';
 import { Motion } from '@motionone/vue';
 
 const activityStore = useActivityStore();
-const isLoading = ref(true);
+const isLoading = ref(activityStore.activities.length === 0); // Start as loading if no activities
+const activities = computed(()=> activityStore.activities)
 
 // 2. Mappings
 const iconMap: Record<string, any> = {
@@ -45,7 +46,7 @@ watch(isLoading, async (newVal) => {
     await nextTick();
     // A tiny delay ensures the browser has painted the elements
     setTimeout(() => {
-      runAnimations();
+      // runAnimations();
     }, 50); 
   }
 });
@@ -58,26 +59,26 @@ onMounted(async () => {
   }
 });
 
-const runAnimations = () => {
-  const cards = document.querySelectorAll('.activity-card');
+// const runAnimations = () => {
+//   const cards = document.querySelectorAll('.activity-card');
   
-  if (cards.length > 0) {
-    const tl = gsap.timeline();
-    tl.from('.activities-header', { 
-      y: -20, opacity: 0, duration: 0.8, ease: 'power3.out' 
-    })
-    .from(cards, { // Pass the direct elements instead of a string selector
-      scale: 0.9, 
-      opacity: 0, 
-      duration: 0.6, 
-      stagger: 0.1, 
-      ease: 'back.out(1.7)' 
-    }, "-=0.4")
-    .from('.info-section', { 
-      y: 30, opacity: 0, duration: 1, ease: 'power2.out' 
-    }, "-=0.2");
-  }
-};
+//   if (cards.length > 0) {
+//     const tl = gsap.timeline();
+//     tl.from('.activities-header', { 
+//       y: -20, opacity: 0, duration: 0.8, ease: 'power3.out' 
+//     })
+//     .from(cards, { // Pass the direct elements instead of a string selector
+//       scale: 0.9, 
+//       opacity: 0, 
+//       duration: 0.6, 
+//       stagger: 0.1, 
+//       ease: 'back.out(1.7)' 
+//     }, "-=0.4")
+//     .from('.info-section', { 
+//       y: 30, opacity: 0, duration: 1, ease: 'power2.out' 
+//     }, "-=0.2");
+//   }
+// };
 </script>
 
 <template>
@@ -100,7 +101,7 @@ const runAnimations = () => {
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
       <Motion 
-        v-for="activity in activityStore.activities"
+        v-for="activity in activities"
         :key="activity.activityId"
         :while-hover="{ y: -8 }"
         class="activity-card bg-white rounded-[40px] p-8 shadow-sm border border-gray-50 flex flex-col"
@@ -139,6 +140,7 @@ const runAnimations = () => {
           </button>
         </div>
       </Motion>
+      
     </div>
 
     <div v-if="!isLoading && activityStore.activities.length === 0" class="text-center py-20 bg-gray-50 rounded-[40px] border-2 border-dashed border-gray-200">

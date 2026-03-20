@@ -8,14 +8,13 @@ import { User } from "../interfaces/User";
 
 export function mapToActivity(data: any): Activity {
     return {
-        activityId: data.ActivityId,
-        title: data.Title,
-        description: data.Description,
-        minMember: data.MinMember,
-        maxMember: data.MaxMember,
-        experience: data.Experience,
-        categoryId: data.Category,
-        activityCategory: mapToActivityCategory(data.Category), 
+        activityId: data.activityId,
+        title: data.title,
+        description: data.description,
+        minMember: data.minMember,
+        maxMember: data.maxMember,
+        experience: data.experience,
+        activityCategory: mapToActivityCategory(data.categoryName), 
     };
 }
 
@@ -32,9 +31,9 @@ export function mapToLevel(data: any): Level {
 export function mapToActivityCategory(category: any): ActivityCategory {
   if (!category) return { categoryId: 0, name: 'General' };
     return {
-        categoryId: data.CategoryId,
-        name: data.Name,
-        activities: data.Activities,
+        categoryId: category.categoryId,
+        name: category,
+        activities: category.activities,
     };
 }
 
