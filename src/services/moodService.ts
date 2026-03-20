@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../router';
 import type { Mood } from '../types';
 import e from 'express';
 

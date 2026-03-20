@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 /* 1. The Theme "Brain" */
@@ -32,7 +33,6 @@
 }
 
 /* 4. External Font and Scrollbars */
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 /* Hide scrollbars globally */
 ::-webkit-scrollbar {
   display: none;

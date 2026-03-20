@@ -14,7 +14,6 @@ const dailyGoal = ref({
   description: 'Complete 2 social activities today to earn bonus XP.',
   progress: 50
 });
-console.log('Current user:', user);
 
 const isEditingGoal = ref(false);
 const editForm = ref({ ...dailyGoal.value });

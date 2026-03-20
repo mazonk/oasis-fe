@@ -62,7 +62,7 @@ const menuItems = [
       <div class="nav-user flex items-center gap-4">
         <div class="hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-2xl bg-gray-50 border border-gray-100">
           <UserIcon class="w-5 h-5 text-gray-400" />
-          <span class="text-sm font-semibold text-gray-900">Katka B.</span>
+          <span class="text-sm font-semibold text-gray-900">{{user?.member?.fname}}</span>
         </div>
         <button 
           @click="emit('logout')"
@@ -77,7 +77,7 @@ const menuItems = [
       <button
         v-for="item in menuItems"
         :key="item.id"
-        @click="emit('update:activeTab', item.id)"
+        @click="$router.push(`/${item.id}`)"
         :class="cn(
           'nav-item p-2 rounded-lg transition-all active:scale-90',
           activeTab === item.id ? 'text-indigo-600 bg-indigo-50' : 'text-gray-400'

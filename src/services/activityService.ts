@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../router';
 import type { Activity } from '../types';
 
 export interface ActivityLog {
