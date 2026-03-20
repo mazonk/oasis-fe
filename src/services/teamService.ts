@@ -1,31 +1,30 @@
-import api from '../api';
-import type { User, TeamInvitation, SocialInteraction } from '../types';
-
-export interface Team {
-  id: string;
-  name: string;
-  members: User[];
-  vibeScore: number;
-}
+import httpClient from './httpClient';
+import type { Team } from '../interfaces/Team';
+import type { CreateTeamDto } from '../interfaces/CreateTeamDto';
 
 export const teamService = {
-  async getTeam(): Promise<Team> {
-    const response = await api.get<Team>('/team');
+  async createTeam(dto: CreateTeamDto): Promise<Team> {
+    const response = await httpClient.post<Team>('/team', dto);
     return response.data;
   },
-  async inviteMember(email: string): Promise<TeamInvitation> {
-    const response = await api.post<TeamInvitation>('/team/invite', { email });
+
+  async getAllTeams(): Promise<Team[]> {
+    const response = await httpClient.get<Team[]>('/team');
     return response.data;
   },
-  async getInvitations(): Promise<TeamInvitation[]> {
-    const response = await api.get<TeamInvitation[]>('/team/invitations');
+
+  async getTeamById(id: number): Promise<Team> {
+    const response = await httpClient.get<Team>(`/team/${id}`);
     return response.data;
   },
-  async respondToInvitation(invitationId: string, status: 'accepted' | 'declined'): Promise<void> {
-    await api.post(`/team/invitations/${invitationId}/respond`, { status });
-  },
-  async getSocialInteractions(): Promise<SocialInteraction[]> {
-    const response = await api.get<SocialInteraction[]>('/team/social-interactions');
-    return response.data;
+
+  async getTeamByMemberId(memberId: number): Promise<Team | null> {
+    try {
+      const response = await httpClient.get<Team>(`/team/member/${memberId}`);
+      return response.data;
+    } catch (e: any) {
+      if (e?.response?.status === 404) return null;
+      throw e;
+    }
   },
 };

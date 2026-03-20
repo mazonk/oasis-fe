@@ -12,6 +12,10 @@ import {
   User as UserIcon
 } from 'lucide-vue-next';
 import { cn } from '../utils/utils';
+import { useAuthStore } from '../stores/AuthStore';
+
+const authStore = useAuthStore();
+const user = authStore.loggedInMember;
 
 defineProps<{
   activeTab: string;
@@ -45,7 +49,7 @@ const menuItems = [
           :key="item.id"
           @click="emit('update:activeTab', item.id)"
           :class="cn(
-            'nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 group font-medium',
+            'nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 group font-medium cursor-pointer',
             activeTab === item.id 
               ? 'bg-oasis-sky text-white' 
               : 'text-gray-50 hover:bg-gray-50 hover:text-gray-600'
@@ -62,7 +66,7 @@ const menuItems = [
       <div class="nav-user flex items-center gap-4">
         <div class="hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-2xl bg-gray-50 border border-gray-100">
           <UserIcon class="w-5 h-5 text-gray-400" />
-          <span class="text-sm font-semibold text-gray-900">User</span>
+          <span class="text-sm font-semibold text-gray-900">{{ user.fname }}</span>
         </div>
         <button 
           @click="emit('logout')"

@@ -1,50 +1,63 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { TeamInvitation, SocialInteraction } from '../types';
-import { teamService, type Team } from '../services/teamService';
+import type { Team } from '../interfaces/Team';
+import type { CreateTeamDto } from '../interfaces/CreateTeamDto';
+import { teamService } from '../services/teamService';
 
 export const useTeamStore = defineStore('team', () => {
   const team = ref<Team | null>(null);
-  const invitations = ref<TeamInvitation[]>([]);
-  const socialInteractions = ref<SocialInteraction[]>([]);
+  const allTeams = ref<Team[]>([]);
   const isLoading = ref(false);
+  const error = ref<string | null>(null);
 
-  async function fetchTeam() {
+  async function fetchMyTeam() {
+    const memberId = sessionStorage.getItem('memberId');
+    if (!memberId) return;
+
     isLoading.value = true;
+    error.value = null;
     try {
-      team.value = await teamService.getTeam();
+      team.value = await teamService.getTeamByMemberId(Number(memberId));
+    } catch (e: any) {
+      error.value = e?.message ?? 'Failed to fetch team';
     } finally {
       isLoading.value = false;
     }
   }
 
-  async function inviteMember(email: string) {
-    const invitation = await teamService.inviteMember(email);
-    invitations.value.push(invitation);
-    return invitation;
-  }
-
-  async function fetchInvitations() {
+  async function fetchAllTeams() {
     isLoading.value = true;
+    error.value = null;
     try {
-      invitations.value = await teamService.getInvitations();
+      allTeams.value = await teamService.getAllTeams();
+    } catch (e: any) {
+      error.value = e?.message ?? 'Failed to fetch teams';
     } finally {
       isLoading.value = false;
     }
   }
 
-  async function respondToInvitation(invitationId: string, status: 'accepted' | 'declined') {
-    await teamService.respondToInvitation(invitationId, status);
-    invitations.value = invitations.value.filter(inv => inv.id !== invitationId);
-    if (status === 'accepted') {
-      await fetchTeam();
+  async function fetchTeamById(id: number) {
+    isLoading.value = true;
+    error.value = null;
+    try {
+      team.value = await teamService.getTeamById(id);
+    } catch (e: any) {
+      error.value = e?.message ?? 'Failed to fetch team';
+    } finally {
+      isLoading.value = false;
     }
   }
 
-  async function fetchSocialInteractions() {
+  async function createTeam(name: string, description: string | null, leaderId: number) {
     isLoading.value = true;
+    error.value = null;
     try {
-      socialInteractions.value = await teamService.getSocialInteractions();
+      const dto: CreateTeamDto = { name, description, leaderId };
+      team.value = await teamService.createTeam(dto);
+    } catch (e: any) {
+      error.value = e?.message ?? 'Failed to create team';
+      throw e;
     } finally {
       isLoading.value = false;
     }
@@ -52,13 +65,12 @@ export const useTeamStore = defineStore('team', () => {
 
   return {
     team,
-    invitations,
-    socialInteractions,
+    allTeams,
     isLoading,
-    fetchTeam,
-    inviteMember,
-    fetchInvitations,
-    respondToInvitation,
-    fetchSocialInteractions,
+    error,
+    fetchMyTeam,
+    fetchAllTeams,
+    fetchTeamById,
+    createTeam,
   };
 });

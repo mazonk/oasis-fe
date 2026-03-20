@@ -5,6 +5,8 @@ import router from '../router';
 import type { IAuthResponse } from "../interfaces/IAuthResponse";
 import { jwtDecode } from "jwt-decode";
 import { AuthService } from "../services/authService.ts"
+import { memberService } from "../services/memberService.ts";
+import { Member } from "../interfaces/Member.ts";
 
 // function isTokenExpired(token: string): boolean {
 //    try {
@@ -22,6 +24,7 @@ export const useAuthStore = defineStore('AuthStore', {
   state: () => ({
     token: sessionStorage.getItem("jwtToken") || (null as string | null),
     memberId: sessionStorage.getItem("memberId") || (null as string | null),
+    loggedInMember: null as Member | null,
     isAuthenticated: sessionStorage.getItem("jwtToken") ? true : false,
     service: AuthService as typeof AuthService
   }),
@@ -31,6 +34,7 @@ export const useAuthStore = defineStore('AuthStore', {
 
       try {
         const decoded = jwtDecode<IAuthResponse>(this.token);
+        this.loggedInMember = await memberService.getById(this.memberId);
         this.isAuthenticated = true;
       } catch (error) {
         console.error('Failed to restore session:', error);
@@ -44,6 +48,8 @@ export const useAuthStore = defineStore('AuthStore', {
         const response = await this.service.login(email, password);
         this.token = response.token;
         this.memberId = response.memberId;
+        this.loggedInMember = await memberService.getById(this.memberId);
+        sessionStorage.setItem("memberId", response.memberId);
         sessionStorage.setItem("jwtToken", response.token);
 
         router.push('/');
@@ -67,7 +73,11 @@ export const useAuthStore = defineStore('AuthStore', {
         const response = await this.service.register(fname, lname, email, password);
         this.memberId = response.memberId;
         this.token = response.token;
+        this.loggedInMember = await memberService.getById(this.memberId);
+        sessionStorage.setItem("memberId", response.memberId);
         sessionStorage.setItem("jwtToken", response.token);
+
+        router.push('/');
       } catch (e) {
         console.log(e)
         throw e;
@@ -81,6 +91,7 @@ export const useAuthStore = defineStore('AuthStore', {
         this.user = null;
         this.token = null;
         sessionStorage.removeItem("jwtToken");
+        localStorage.setItem('activeTab', 'home');
       } catch (e) {
         throw e;
       } finally {
