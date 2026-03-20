@@ -40,7 +40,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container h-[70vh] space-y-8 w-full mx-auto p-6 font-quicksand">
+  <div class="container space-y-8 w-full mx-auto p-6 font-quicksand">
     
     <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 header-content">
       <div>

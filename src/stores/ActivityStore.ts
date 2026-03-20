@@ -1,43 +1,22 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { Activity } from '../types';
-import { activityService, type ActivityLog } from '../services/activityService';
+import type { Activity } from '../interfaces/Activity';
+import { activityService  } from '../services/activityService';
 
-export const useActivityStore = defineStore('activity', () => {
-  const activities = ref<Activity[]>([]);
-  const recentActivityLogs = ref<ActivityLog[]>([]);
-  const isLoading = ref(false);
+export const useActivityStore = defineStore('activityStore', {
+  state: () => ({
+    activities: [] as Activity[],
+  }),
 
-  async function fetchActivities() {
-    isLoading.value = true;
-    try {
-      activities.value = await activityService.getActivities();
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  async function logActivity(data: { activityId: string; date: string }) {
-    const newLog = await activityService.logActivity(data);
-    recentActivityLogs.value.unshift(newLog);
-    return newLog;
-  }
-
-  async function fetchRecentActivities(userId: string) {
-    isLoading.value = true;
-    try {
-      recentActivityLogs.value = await activityService.getRecentActivities(userId);
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  return {
-    activities,
-    recentActivityLogs,
-    isLoading,
-    fetchActivities,
-    logActivity,
-    fetchRecentActivities,
-  };
+  actions: {
+    async fetchActivities(): Promise<void> {
+      try {
+        const data = await activityService.getActivities();
+        this.activities = data;
+      } catch (e: any) {
+          console.error("Error fetching all activities:", e);
+          throw e;
+        }
+    },
+  },
 });

@@ -1,25 +1,16 @@
-import api from '../router';
+import instance from '../services/httpClient';
 import type { Activity } from '../types';
-
-export interface ActivityLog {
-  id: string;
-  userId: string;
-  activityId: string;
-  date: string;
-  xpEarned: number;
-}
+import { mapToActivity } from '../utils/mapper';
 
 export const activityService = {
   async getActivities(): Promise<Activity[]> {
-    const response = await api.get<Activity[]>('/activities');
-    return response.data;
-  },
-  async logActivity(data: { activityId: string; date: string }): Promise<ActivityLog> {
-    const response = await api.post<ActivityLog>('/activities/log', data);
-    return response.data;
-  },
-  async getRecentActivities(userId: string): Promise<ActivityLog[]> {
-    const response = await api.get<ActivityLog[]>(`/activities/recent/${userId}`);
-    return response.data;
+    try {
+      const response = await instance.get('Activity');
+      console.log(response.data)
+      return response.data.map(mapToActivity);
+    } catch (error) {
+      console.error('Error fetching activities:', error);
+      throw error;
+    }
   },
 };

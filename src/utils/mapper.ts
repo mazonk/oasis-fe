@@ -13,6 +13,7 @@ export function mapToActivity(data: any): Activity {
         description: data.Description,
         minMember: data.MinMember,
         maxMember: data.MaxMember,
+        experience: data.Experience,
         categoryId: data.Category,
         activityCategory: mapToActivityCategory(data.Category), 
     };
@@ -28,7 +29,8 @@ export function mapToLevel(data: any): Level {
   };
 }
 
-export function mapToActivityCategory(data: any): ActivityCategory {
+export function mapToActivityCategory(category: any): ActivityCategory {
+  if (!category) return { categoryId: 0, name: 'General' };
     return {
         categoryId: data.CategoryId,
         name: data.Name,

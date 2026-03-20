@@ -5,6 +5,7 @@ export interface Activity {
   description?: string;
   minMember?: number;
   maxMember?: number;
+  experience?: number;
   categoryId?: number;
   category?: ActivityCategory;
 }
